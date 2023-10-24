@@ -1,0 +1,16 @@
+.product-container{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content:  center;
+    width: 0 auto;
+    height: 0 auto;
+}
+
+.title{
+    text-align: center;
+}
+
+.banner{
+    margin: 10px;
+}

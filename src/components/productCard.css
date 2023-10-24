@@ -1,0 +1,29 @@
+.card {
+  width: 100%; 
+  max-width: 300px; 
+  border-radius: 20px;
+  box-shadow: 2px 2px 5px #3333;
+  background-color: #7da4f1;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-text {
+  text-align: left; 
+  font-weight: bold;
+}
+
+.link-no-color-change {
+  color: inherit; 
+  text-decoration: none; 
+}
+
+.link-no-color-change:hover {
+  color: inherit;
+}
