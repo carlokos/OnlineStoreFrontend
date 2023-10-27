@@ -1,0 +1,19 @@
+.list-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+}
+
+/* Media query for tablets */
+@media (max-width: 1220px) {
+    .list-wrap {
+      grid-template-columns: repeat(2, 1fr);
+    }
+}
+  
+/* Media query for mobile devices */
+@media (max-width: 850px) {
+    .list-wrap {
+      grid-template-columns: 1fr;
+    }
+}

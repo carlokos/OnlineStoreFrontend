@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ProductService from "../services/productService";
+import ProductService from "../../services/productService";
 import "./productView.css";
-import testImg from "../imgs/test.jpg";
-import Image from 'react-bootstrap/Image'
+import testImg from '../../imgs/test.jpg';
+import Image from 'react-bootstrap/Image';
 
 function ProductView({ product: propProduct }) {
   const [product, setProduct] = useState({

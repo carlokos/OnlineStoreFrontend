@@ -10,9 +10,14 @@ const getProduct = (id) => {
     return axios.get(`${API_URL}products/${id}`);
 }
 
+const getProductsByCategory = (id) => {
+    return axios.get(`${API_URL}products/category/${id}`);
+}
+
 const ProductService = {
     getProducts,
-    getProduct
+    getProduct,
+    getProductsByCategory
 };
 
 export default ProductService;

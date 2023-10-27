@@ -20,10 +20,25 @@ const login = (email, password) => {
     )
 };
 
+const signup = (name, subname, email, password) => {
+    console.log(name);
+    console.log(subname);
+    console.log(email);
+    console.log(password);
+    return axios.post(`${API_URL}users`,
+        JSON.stringify({name, subname, password, email}),
+        {
+            headers: { 'Content-Type': 'application/json'},
+            withCredentials: true
+        }
+    )
+};
+
 const UserService = {
     getUsers,
     getUser,
-    login
+    login,
+    signup
 };
 
 export default UserService;

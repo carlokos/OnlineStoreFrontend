@@ -1,0 +1,27 @@
+.product-container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.product_panelList-wrap,.product_panel-wrap,.product_list-wrap{
+    overflow-y: auto;
+}
+
+.product_panelList-wrap{
+    display: flex;
+    flex: 1;
+}
+
+.product_panel-wrap{
+    flex-basis: 280px;
+    padding: 1rem;
+    margin-right: 120px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fafafa;
+}
+
+.product_list-wrap{
+    flex: 1;
+    padding: 1rem;
+}
