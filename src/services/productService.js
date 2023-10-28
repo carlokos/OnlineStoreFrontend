@@ -14,10 +14,15 @@ const getProductsByCategory = (id) => {
     return axios.get(`${API_URL}products/category/${id}`);
 }
 
+const deleteProduct = (id) => {
+    return axios.delete(`${API_URL}products/${id}`);
+}
+
 const ProductService = {
     getProducts,
     getProduct,
-    getProductsByCategory
+    getProductsByCategory,
+    deleteProduct
 };
 
 export default ProductService;

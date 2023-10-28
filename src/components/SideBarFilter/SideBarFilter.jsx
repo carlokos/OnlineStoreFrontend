@@ -23,7 +23,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
         setCategories(response.data);
       })
       .catch(error => {
-        console.error('Error al obtener categorías:', error);
+        console.error('Error fetching categories:', error);
       });
   }, []);
 
@@ -48,7 +48,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
   return (
     <div className='filter'>
       <TextField
-        label="Buscar producto"
+        label="Search by name"
         variant="outlined"
         fullWidth
         value={searchTerm}

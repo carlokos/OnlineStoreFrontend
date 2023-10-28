@@ -3,12 +3,13 @@ import ProductService from '../../services/productService';
 import Sidebar from '../../components/SideBarFilter/SideBarFilter';
 import './productPage.css'
 import ProductList from '../../components/ProductList/productList';
+import EditIcon from '@mui/icons-material/Edit';
+import Fab from '@mui/material/Fab';
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -34,7 +35,6 @@ function ProductPage() {
       const response = await ProductService.getProducts();
       setProducts(response.data);
       setAllProducts(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -50,7 +50,7 @@ function ProductPage() {
         .filter((product) =>
           product.title && product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
           (selectedCategory === null || product.category_id === selectedCategory)
-        ); 
+        );
       setProducts(filtered);
     }
   };
@@ -65,6 +65,14 @@ function ProductPage() {
           <ProductList products={products} />
         </div>
       </div>
+
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={{ position: 'fixed', bottom: 10, right: 25 }}
+      >
+        <EditIcon/>
+      </Fab>
     </div>
   );
 }
