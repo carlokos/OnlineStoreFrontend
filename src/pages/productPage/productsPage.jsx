@@ -3,13 +3,14 @@ import ProductService from '../../services/productService';
 import Sidebar from '../../components/SideBarFilter/SideBarFilter';
 import './productPage.css'
 import ProductList from '../../components/ProductList/productList';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add'
 import Fab from '@mui/material/Fab';
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -71,7 +72,7 @@ function ProductPage() {
         aria-label="add"
         style={{ position: 'fixed', bottom: 10, right: 25 }}
       >
-        <EditIcon/>
+        <AddIcon/>
       </Fab>
     </div>
   );

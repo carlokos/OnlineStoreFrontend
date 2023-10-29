@@ -6,16 +6,19 @@ import Checkbox from '@mui/material/Checkbox';
 import CategoryService from '../../services/categoryService';
 import './SideBarFilter.css'
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider'; 
-import Button from '@mui/material/Button'; 
-import { Link } from 'react-router-dom';
+import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import CategoryDialog from '../FormDialog/CategoryDialog';
 
 export default function Sidebar({ onCategoryChange, onSearch }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [editCategoryId, setEditCategoryId] = useState(null);;
 
   useEffect(() => {
     CategoryService.getCategories()
@@ -33,7 +36,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
     } else {
       setSelectedCategory(categoryId);
     }
-    if(onCategoryChange){
+    if (onCategoryChange) {
       onCategoryChange(categoryId);
     }
   };
@@ -44,6 +47,16 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
       onSearch(event.target.value);
     }
   };
+
+  const handleEditClick = (categoryId) => {
+    setEditCategoryId(categoryId);
+    console.log(editCategoryId);
+    openCategoryDialog();
+  };
+
+  const openCategoryDialog = () => {
+    setCategoryDialogOpen(true);
+  }
 
   return (
     <div className='filter'>
@@ -69,19 +82,25 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
               onChange={() => handleCheckboxChange(category.id)}
             />
             <ListItemText primary={category.name} />
+            <IconButton
+              edge="end"
+              aria-label="edit"
+              size='small'
+              onClick={() => handleEditClick(category.id)}
+            >
+              <EditIcon />
+            </IconButton>
           </ListItem>
         ))}
       </List>
 
       <Divider variant="fullWidth" />
 
-      <div className='button-container'>
-        <Link to={"/"}>
-          <Button variant="contained" color="primary">
-            Go to category-dashboard
-          </Button>
-        </Link>
-      </div>
+      <CategoryDialog
+        open={isCategoryDialogOpen}
+        onClose={() => setCategoryDialogOpen(false)}
+        id={editCategoryId}
+      />
     </div>
   );
 };

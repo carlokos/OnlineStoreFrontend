@@ -6,9 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ProductService from "../../../services/productService";
-import ResponsiveDialog from "../../ResponsiveDialog/ResponsiveDialog";
+import EditIcon from '@mui/icons-material/Edit';
+import ProductDialog from "../../FormDialog/ProductDialog";
 import { Link } from "react-router-dom";
 
 const StyledCard = styled(Card)({
@@ -28,21 +27,10 @@ function ProductCard(product) {
         setDialogOpen(true);
     }
 
-    const handleConfirmDelete = () => {
-        ProductService.deleteProduct(product.id)
-            .then(response => {
-                setDialogOpen(false);
-                window.location.reload();
-            })
-            .catch(error => {
-                setDialogOpen(false);
-            })
-    };
-
     const handleCancelDelete = () => {
         setDialogOpen(false);
     };
-
+ 
     return (
         <StyledCard>
             <Image className="card-img-top" src="https://picsum.photos/300/200" alt="Card image cap" thumbnail />
@@ -62,22 +50,20 @@ function ProductCard(product) {
                 </Button>
 
                 <Button size="small">Add to cart</Button>
-                
+
                 <Button
                     size="small"
                     variant="outlined"
-                    color="error"
-                    startIcon={<DeleteIcon />}
+                    color="secondary"
+                    startIcon={<EditIcon/>}
                     onClick={handleDeleteClick}>
-                    Delete
+                    Edit
                 </Button>
-
-                <ResponsiveDialog
+                
+                <ProductDialog 
                     open={isDialogOpen ? true : false}
                     onClose={handleCancelDelete}
-                    onConfirm={handleConfirmDelete}
-                    title="Delete product?"
-                    msg={`${product.title} is going to be delete, proceed?`}
+                    id={product.id}
                 />
             </CardActions>
         </StyledCard>

@@ -6,8 +6,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ProductView from './pages/productView/productView'
 import Login from './pages/login/login'
 import SignUp from './pages/signup/signup'
-import ProductDashboard from './pages/productDashboard/productDashboard'
-
 
 function App() {
   return (
@@ -19,7 +17,6 @@ function App() {
         <Route exact path='/productview/:id' element={<ProductView/>} />
         <Route exact path='/login' element={<Login/>}/>
         <Route exact path='/signup' element={<SignUp/>}/>
-        <Route exact path='/productAdmin' element={<ProductDashboard/>}/>
       </Routes>
     </Router>
     </>

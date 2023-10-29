@@ -10,9 +10,20 @@ const getCategory = (id) => {
     return axios.get(`${API_URL}categories/${id}`);
 }
 
+const updateCategory = (categoryData) => {
+    const {id} = categoryData;
+    return axios.put(`${API_URL}categories/${id}`, categoryData);
+}
+
+const deleteCategory = (id) => {
+    return axios.delete(`${API_URL}categories/${id}`);
+}
+
 const CategoryService = {
     getCategories,
-    getCategory
+    getCategory,
+    updateCategory,
+    deleteCategory
 };
 
 export default CategoryService;
