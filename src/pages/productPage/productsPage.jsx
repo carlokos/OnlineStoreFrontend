@@ -5,6 +5,7 @@ import './productPage.css'
 import ProductList from '../../components/ProductList/productList';
 import AddIcon from '@mui/icons-material/Add'
 import Fab from '@mui/material/Fab';
+import { Link } from 'react-router-dom';
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -67,13 +68,15 @@ function ProductPage() {
         </div>
       </div>
 
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: 'fixed', bottom: 10, right: 25 }}
-      >
-        <AddIcon/>
-      </Fab>
+      <Link to={"/addGoods"}>
+        <Fab
+          color="primary"
+          aria-label="add"
+          style={{ position: 'fixed', bottom: 10, right: 25 }}
+        >
+          <AddIcon/>
+        </Fab>
+      </Link>
     </div>
   );
 }

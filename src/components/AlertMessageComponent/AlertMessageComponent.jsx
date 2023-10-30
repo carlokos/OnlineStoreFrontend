@@ -1,20 +1,19 @@
 import { Alert, Snackbar } from '@mui/material';
-import React from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import './AlertMessageComponent.css';
 import Slide from '@mui/material/Slide';
 
-const AlertMessageComponent = ({ message, severity }) => {
-  const [state, setState] = React.useState({
+const AlertMessageComponent = ({ message, severity, open, onClose }) => {
+  const [state, setState] = useState({
     vertical: 'top',
     horizontal: 'center',
   });
 
   const { vertical, horizontal} = state;
-  const [open, setOpen] = React.useState(true);
-
+  
   const handleClose = () => {
-    setOpen(false);
+    onClose();
   };
 
   const Transition = React.forwardRef(function Transition(props, ref) {

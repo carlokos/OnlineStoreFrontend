@@ -1,10 +1,9 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
-import './login.css'
 import UserService from "../../services/userService";
 import AlertMessageComponent from "../../components/AlertMessageComponent/AlertMessageComponent";
 
-function Login(){
+function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showAlert, setShowAlert] = useState(false);
@@ -12,10 +11,10 @@ function Login(){
     const [severity, setSeverity] = useState('info');
 
     const handleLogin = () => {
-        try{
+        try {
             const response = UserService.login(email, password)
                 .then(response => {
-                    if(response.status === 200){
+                    if (response.status === 200) {
                         setMessage("Loggin successfully");
                         setSeverity("success");
                         setShowAlert(true);
@@ -27,20 +26,20 @@ function Login(){
                     setSeverity("error");
                     setShowAlert(true);
                 })
-        }catch(error){
+        } catch (error) {
             console.error('Cannot log in correctly', error.message);
         }
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         await handleLogin();
     }
 
-    return(
+    return (
         <div className="login template d-flex justify-content-center align-items-center vw-100 vh-100 bg-primary">
             <div>
-             {showAlert && <AlertMessageComponent message={message} severity={severity} vertical="top" horizontal="center" />}
+                <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
             </div>
 
             <div className="form_container p-5 rounded b bg-white">
@@ -48,16 +47,16 @@ function Login(){
                     <h3 className="text-center">Sign In</h3>
                     <div className="mb-2">
                         <label htmlFor="email">Email</label>
-                        <input type="email" placeholder="Enter email" className="form-control" value={email} 
-                         onChange={(e) => setEmail(e.target.value)}></input>
+                        <input type="email" placeholder="Enter email" className="form-control" value={email}
+                            onChange={(e) => setEmail(e.target.value)}></input>
                     </div>
                     <div className="mb-2">
                         <label htmlFor="password">Password</label>
                         <input type="password" placeholder="Enter password" className="form-control" value={password}
-                        onChange={(e) => setPassword(e.target.value)}></input>
+                            onChange={(e) => setPassword(e.target.value)}></input>
                     </div>
                     <div className="mb-2">
-                        <input type="checkbox" className="custom-control custom-checkbox" id="check"/>
+                        <input type="checkbox" className="custom-control custom-checkbox" id="check" />
                         <label htmlFor="check" className="custom-input-label ms-2">
                             Remember me
                         </label>
@@ -71,7 +70,7 @@ function Login(){
                 </form>
             </div>
         </div>
-        
+
     )
 }
 

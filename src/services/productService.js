@@ -23,12 +23,17 @@ const updateProduct = (productData) => {
     return axios.put(`${API_URL}products/${id}`, productData);
 };
 
+const addProduct = (productData) => {
+    return axios.post(`${API_URL}products`, productData);
+};
+
 const ProductService = {
     getProducts,
     getProduct,
     getProductsByCategory,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    addProduct
 };
 
 export default ProductService;

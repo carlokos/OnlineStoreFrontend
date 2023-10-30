@@ -19,11 +19,16 @@ const deleteCategory = (id) => {
     return axios.delete(`${API_URL}categories/${id}`);
 }
 
+const addCategory = (categoryData) => {
+    return axios.post(`${API_URL}categories`, categoryData);
+};
+
 const CategoryService = {
     getCategories,
     getCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    addCategory
 };
 
 export default CategoryService;
