@@ -1,11 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import './navbar.css';
+import UserService from '../../services/userService';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
 
 export default function NavBar() {
+    const [user, setUser] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogOut = () => {
+        localStorage.removeItem('token');
+        window.location.reload();
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            UserService.loadCurrentUser(token)
+                .then(response => {
+                    setUser(response.data);
+                })
+                .catch(error => {
+                    console.error('Error al cargar al usuario');
+                })
+        }
+    })
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <Link className="navbar-brand" to="/">
@@ -58,11 +92,30 @@ export default function NavBar() {
             </div>
 
             <div className="d-flex">
-                <div className="user_png">
-                    <Link className="btn btn-link" to="/login">
-                        <FontAwesomeIcon icon={faUserCircle} size="lg" className="text-white" />
-                    </Link>
-                </div>
+                {user ? (
+                    <div>
+                        <Button
+                            onClick={handleMenuClick}
+                            className="white-text-button"
+                        >
+                            Welcome {user.name}
+                        </Button>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem>View profile</MenuItem>
+                            <MenuItem onClick={handleLogOut}>log out</MenuItem>
+                        </Menu>
+                    </div>
+                ) : (
+                    <div className="user_png">
+                        <Link className="btn btn-link" to="/login">
+                            <FontAwesomeIcon icon={faUserCircle} size="lg" className="text-white" />
+                        </Link>
+                    </div>
+                )}
             </div>
 
             <div className="cart">

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import UserService from "../../services/userService";
 import AlertMessageComponent from "../../components/AlertMessageComponent/AlertMessageComponent";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -10,18 +11,26 @@ function Login() {
     const [message, setMessage] = useState('Default message');
     const [severity, setSeverity] = useState('info');
 
+    const navigate = useNavigate();
+
     const handleLogin = () => {
         try {
             const response = UserService.login(email, password)
                 .then(response => {
                     if (response.status === 200) {
+                        const token = response.data.accessToken;
+                        localStorage.setItem("token", token);
+
                         setMessage("Loggin successfully");
                         setSeverity("success");
                         setShowAlert(true);
+
+                        navigate('/');
+                        window.location.reload();
                     }
                 })
                 .catch(error => {
-                    console.log("incorrect user");
+                    console.log(error);
                     setMessage("Email or password incorrect");
                     setSeverity("error");
                     setShowAlert(true);

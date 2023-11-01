@@ -11,7 +11,7 @@ const getUser = (id) => {
 }
 
 const login = (email, password) => {
-    return axios.post(`${API_URL}users/login`,
+    return axios.post(`${API_URL}auth/login`,
         JSON.stringify({email, password}),
         {
             headers: { 'Content-Type': 'application/json'},
@@ -21,11 +21,7 @@ const login = (email, password) => {
 };
 
 const signup = (name, subname, email, password) => {
-    console.log(name);
-    console.log(subname);
-    console.log(email);
-    console.log(password);
-    return axios.post(`${API_URL}users`,
+    return axios.post(`${API_URL}auth/register`,
         JSON.stringify({name, subname, password, email}),
         {
             headers: { 'Content-Type': 'application/json'},
@@ -34,11 +30,20 @@ const signup = (name, subname, email, password) => {
     )
 };
 
+const loadCurrentUser = (token) => {
+    return axios.get(`${API_URL}users/current`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+}
+
 const UserService = {
     getUsers,
     getUser,
     login,
-    signup
+    signup,
+    loadCurrentUser
 };
 
 export default UserService;

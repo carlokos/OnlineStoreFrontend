@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import UserService from "../../services/userService";
+import AlertMessageComponent from "../../components/AlertMessageComponent/AlertMessageComponent";
 
 function SignUp(){
     const [email, setEmail] = useState('');
@@ -8,12 +9,27 @@ function SignUp(){
     const [name, setName] = useState('');
     const [subname, setSubname] = useState('');
 
-    const handleSignup= async => {
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('Default message');
+    const [severity, setSeverity] = useState('info');
+
+    const buildMessage = (severity, msg) => {
+        setSeverity(severity);
+        setMessage(msg);
+        setShowAlert(true);
+    }
+    const handleSignup= async () => {
         try{
-            const response = UserService.signup(name, subname, email, password);
-            console.log(response.data);
+            if(email !== '' && password !== '' && name !== '' && subname !== ''){
+                const response = await UserService.signup(name, subname, email, password);
+                if(response.status === 200){
+                    buildMessage("success", "User register succesfully");
+                }
+            } else{
+                buildMessage("error", "please, fill out all fields");
+            }
         }catch(error){
-            console.error('Cannot log in correctly', error.message);
+            buildMessage("error", "Email already taken");
         }
     }
 
@@ -24,6 +40,10 @@ function SignUp(){
 
     return(
         <div className="signup template d-flex justify-content-center align-items-center vw-100 vh-100 bg-primary">
+            <div>
+                <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
+            </div>
+
             <div className="form_container p-5 rounded b bg-white">
                 <form>
                     <h3 className="text-center">Sign Up</h3>

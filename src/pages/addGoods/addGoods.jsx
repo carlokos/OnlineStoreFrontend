@@ -46,7 +46,7 @@ const AddGoods = () => {
 
     const handleCategoryInputChange = (fieldName) => (event) => {
         const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
-
+        
         setCategoryFormData({
             ...categoryFormData,
             [fieldName]: value,
@@ -106,7 +106,7 @@ const AddGoods = () => {
     }
 
     return (
-        <div  className="container-fluid d-flex justify-content-center align-items-center vw-100 vh-100">
+        <div className="container-fluid d-flex justify-content-center align-items-center vw-100 vh-100">
             <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
 
             <Paper elevation={3} sx={{ minWidth: '1200px', minHeight: '300px', overflowY: 'auto' }}>
