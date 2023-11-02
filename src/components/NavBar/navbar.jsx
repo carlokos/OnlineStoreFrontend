@@ -23,7 +23,7 @@ export default function NavBar() {
 
     const handleLogOut = () => {
         localStorage.removeItem('token');
-        window.location.reload();
+        window.location.href = '/'
     }
 
     useEffect(() => {
@@ -91,6 +91,9 @@ export default function NavBar() {
                 </ul>
             </div>
 
+            {/**
+             * It changes depending if user have identify or not
+             */}
             <div className="d-flex">
                 {user ? (
                     <div>
@@ -105,7 +108,7 @@ export default function NavBar() {
                             open={Boolean(anchorEl)}
                             onClose={handleMenuClose}
                         >
-                            <MenuItem>View profile</MenuItem>
+                            <Link to={"/profile"}><MenuItem>View profile</MenuItem></Link>
                             <MenuItem onClick={handleLogOut}>log out</MenuItem>
                         </Menu>
                     </div>

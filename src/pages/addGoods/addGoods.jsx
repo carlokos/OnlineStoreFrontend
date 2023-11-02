@@ -3,14 +3,14 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import ProductForm from '../../components/FormDialog/ProductoForm/ProductForm';
+import ProductForm from '../../components/FormDialog/ProductForm/ProductForm'
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ProductService from '../../services/productService';
 import CategoryService from '../../services/categoryService';
 import AlertMessageComponent from '../../components/AlertMessageComponent/AlertMessageComponent';
-import isValid from '../../components/FormDialog/ProductoForm/isValid';
+import isValid from '../../components/FormDialog/ProductForm/isValid';
 
 const AddGoods = () => {
     const [tabValue, setTabValue] = useState(0);

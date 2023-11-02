@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import Button from '@mui/material/Button';
 import ProductService from "../../services/productService";
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-import ResponsiveDialog from "../ResponsiveDialog/ResponsiveDialog";
-import ProductForm from "./ProductoForm/ProductForm";
-import isValid from "./ProductoForm/isValid";
+import ProductForm from "./ProductForm/ProductForm";
+import isValid from "./ProductForm/isValid";
+import FormDialog from "./FormDialog";
 
 const UpdateProductDialog = ({ open, onClose, id }) => {
     const [product, setProduct] = useState({});
     const [formData, setFormData] = useState({});
-    const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    
     const [isFormValid, setIsFormValid] = useState(false);
 
     useEffect(() => {
@@ -48,11 +42,11 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
 
     const updateProduct = async () => {
         try {
-            if(isFormValid){
+            if (isFormValid) {
                 await ProductService.updateProduct(formData);
                 onClose();
                 window.location.reload();
-            } else{
+            } else {
                 console.log("hay campos vacios");
             }
         } catch (error) {
@@ -70,48 +64,20 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
         }
     };
 
-    const closeDeleteDialog = () => {
-        setDeleteDialogOpen(false);
-    }
-
-    const openDeleteDialog = () => {
-        setDeleteDialogOpen(true);
-    }
-
     return (
         <div>
-            <Dialog open={open} onClose={onClose}>
-                <DialogTitle>Formulario</DialogTitle>
-                <DialogContent>
-                    <ProductForm
-                        formData={formData}
-                        handleInputChange={handleInputChange}
-                    />
-                    <Button variant="contained" color="primary" onClick={updateProduct} style={{ marginRight: '8px' }}>
-                        Actualizar
-                    </Button>
-
-                    <Button variant="contained" color="secondary" onClick={onClose} style={{ marginRight: '8px' }}>
-                        Cancel
-                    </Button>
-
-                    <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        color="error"
-                        onClick={openDeleteDialog}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </DialogContent>
-            </Dialog>
-
-            <ResponsiveDialog
-                open={isDeleteDialogOpen ? true : false}
-                onClose={closeDeleteDialog}
-                onConfirm={deleteProduct}
-                title="Delete product?"
-                msg={`${formData.title} is going to be delete, proceed?`} />
+            <FormDialog
+                open={open}
+                onClose={onClose}
+                dataForm={{
+                    component: ProductForm,
+                    formData: formData,
+                    handleInputChange: handleInputChange,
+                    isValid: isFormValid,
+                }}
+                updateItem={updateProduct}
+                deleteItem={deleteProduct}
+            />
         </div>
     );
 };
