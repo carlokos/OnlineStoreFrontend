@@ -20,6 +20,17 @@ const login = (email, password) => {
     )
 };
 
+const updateUser = (userData) => {
+    const { id } = userData;
+    console.log(id);
+    return axios.put(`${API_URL}users/${id}`, userData);
+}
+
+const updatePassword = (id, password) => {
+    console.log(id, password);
+    return axios.put(`${API_URL}users/password/${id}`, password);
+};
+
 const signup = (name, subname, email, password) => {
     return axios.post(`${API_URL}auth/register`,
         JSON.stringify({name, subname, password, email}),
@@ -43,7 +54,9 @@ const UserService = {
     getUser,
     login,
     signup,
-    loadCurrentUser
+    loadCurrentUser,
+    updateUser, 
+    updatePassword
 };
 
 export default UserService;

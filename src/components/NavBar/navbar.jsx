@@ -29,7 +29,7 @@ export default function NavBar() {
     useEffect(() => {
         const token = localStorage.getItem('token');
 
-        if (token) {
+        if (token && !user) {
             UserService.loadCurrentUser(token)
                 .then(response => {
                     setUser(response.data);
@@ -38,7 +38,7 @@ export default function NavBar() {
                     console.error('Error al cargar al usuario');
                 })
         }
-    })
+    }, [])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
