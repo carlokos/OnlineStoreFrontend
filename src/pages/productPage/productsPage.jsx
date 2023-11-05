@@ -8,8 +8,12 @@ import Fab from '@mui/material/Fab';
 import { Link } from 'react-router-dom';
 
 function ProductPage() {
+  /**
+   * We need to save all Products in both variables so it always refresh well while searching and filtering
+   */
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
+  
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 

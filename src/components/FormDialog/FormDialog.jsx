@@ -22,6 +22,12 @@ export default function FormDialog({ open, onClose, dataForm, updateItem, delete
         setDeleteDialogOpen(true);
     }
 
+    const defaultHandleInputChange = (fieldName) => (event) => {
+        if (dataForm && dataForm.handleInputChange) {
+            dataForm.handleInputChange(fieldName)(event);
+        }
+    };
+    
     return (
         <div>
             <Dialog open={open} onClose={onClose}>
@@ -29,11 +35,11 @@ export default function FormDialog({ open, onClose, dataForm, updateItem, delete
                 <DialogContent>
                     {dataForm && React.createElement(dataForm.component, {
                         formData: dataForm.formData,
-                        handleInputChange: dataForm.handleInputChange,
+                        handleInputChange: dataForm.handleInputChange || defaultHandleInputChange,
                         isValid: dataForm.isValid,
                     })}
                     <Button variant="contained" color="primary" onClick={updateItem} style={{ marginRight: '8px' }}>
-                        Update
+                        Commit
                     </Button>
 
                     <Button variant="contained" color="secondary" onClick={onClose} style={{ marginRight: '8px' }}>

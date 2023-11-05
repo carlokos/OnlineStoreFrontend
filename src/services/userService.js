@@ -22,12 +22,10 @@ const login = (email, password) => {
 
 const updateUser = (userData) => {
     const { id } = userData;
-    console.log(id);
     return axios.put(`${API_URL}users/${id}`, userData);
 }
 
 const updatePassword = (id, password) => {
-    console.log(id, password);
     return axios.put(`${API_URL}users/password/${id}`, password);
 };
 

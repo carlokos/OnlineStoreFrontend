@@ -6,13 +6,28 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import FormDialog from '../../components/FormDialog/FormDialog';
 import PasswordChangeForm from '../../components/FormDialog/userForm/PasswordChangeForm';
+import AddressList from '../../components/AddressList/AddressList';
+import AddressForm from '../../components/FormDialog/AdressForm/AddressForm';
+import AddressService from '../../services/adresssService';
 
 const UserDetails = () => {
-    const [user, setUser] = useState();
     const [tabValue, setTabValue] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
+
+    const [user, setUser] = useState();
     const [userData, setUserData] = useState();
+
     const [passwordData, setPasswordData] = useState({ password: '' });
+    const [addressData, setAddressData] = useState({
+        country: '',
+        city: '',
+        postal_code: '',
+        street: '',
+        home: '',
+        apartament: '',
+        user_id: ''
+    });
+
     const [isOpen, setIsOpen] = useState(false);
 
     const handleTabChange = (event, newValue) => {
@@ -26,7 +41,10 @@ const UserDetails = () => {
                 const response = await UserService.loadCurrentUser(token);
                 setUser(response.data);
                 setUserData(response.data);
-                console.log(response.data);
+                setAddressData(prevAddressData => ({
+                    ...prevAddressData,
+                    user_id: parseInt(response.data.id, 10),
+                }));
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -57,8 +75,18 @@ const UserDetails = () => {
     const updatePassword = async() =>{
         try{
             await UserService.updatePassword(user.id, passwordData);
+            setIsOpen(false);
         } catch (error) {
             console.error("Error changin password: ", error);
+        }
+    }
+
+    const createAddress = async() => {
+        try{
+            await AddressService.addAddress(addressData);
+            window.location.reload();
+        } catch (error){
+            console.error("Error adding address: ", error);
         }
     }
 
@@ -66,36 +94,47 @@ const UserDetails = () => {
         setIsOpen(false);
     };
 
-    const handleInputChange = (fieldName) => (event) => {
+    const handleInputChange = (data, setData) => (fieldName) => (event) => {
         const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
 
-        setUserData({
-            ...userData,
+        setData({
+            ...data,
             [fieldName]: value,
         });
     };
 
-    const handlePasswordInputChange = (fieldName) => (event) => {
-        const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
+    let formDialogProps = {};
 
-        setPasswordData({
-            ...passwordData,
-            [fieldName]: value,
-        });
-    };
+    if (tabValue === 0) {
+        formDialogProps = {
+            open: isOpen ? true : false,
+            onClose: handleCancel,
+            dataForm: {
+                component: PasswordChangeForm,
+                formData: passwordData,
+                handleInputChange: handleInputChange(passwordData, setPasswordData),
+            },
+            updateItem: updatePassword
+        };
+    } else if (tabValue === 1) {
+        formDialogProps = {
+            open: isOpen ? true : false,
+            onClose: handleCancel,
+            dataForm: {
+                component: AddressForm,
+                formData: addressData,
+                handleInputChange: handleInputChange(addressData, setAddressData),
+            },
+            updateItem: createAddress
+        };
+    } else if (tabValue === 2) {
+        formDialogProps = {
+        };
+    }
 
     return (
         <div className="container-fluid d-flex justify-content-center align-items-center vw-100 vh-100">
-            <FormDialog
-                open={isOpen ? true : false}
-                onClose={handleCancel}
-                dataForm={{
-                    component: PasswordChangeForm,
-                    formData: passwordData,
-                    handleInputChange: handlePasswordInputChange
-                }}
-                updateItem={updatePassword}
-            />
+            <FormDialog {...formDialogProps}/>
             <Paper elevation={3}>
                 <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
                     <Tabs
@@ -109,6 +148,7 @@ const UserDetails = () => {
                         <Tab label="Your Orders" />
                     </Tabs>
                     <Box sx={{ flex: 1, p: 3, minWidth: 0 }}>
+                        
                         {tabValue === 0 && user && (
                             <Box className="m-4">
                                 <Typography variant="h5" >User Profile</Typography>
@@ -117,14 +157,14 @@ const UserDetails = () => {
                                     <TextField
                                         label="Name"
                                         value={userData.name}
-                                        onChange={handleInputChange('name')}
+                                        onChange={handleInputChange(userData, setUserData)('name')}
                                         disabled={!isEditing}
                                         className="m-1"
                                     />
                                     <TextField
                                         label="Subname"
                                         value={userData.subname}
-                                        onChange={handleInputChange('subname')}
+                                        onChange={handleInputChange(userData, setUserData)('subname')}
                                         disabled={!isEditing}
                                         className="m-1"
                                     />
@@ -137,7 +177,7 @@ const UserDetails = () => {
                                     <TextField
                                         label="Email"
                                         value={userData.email}
-                                        onChange={handleInputChange('email')}
+                                        onChange={handleInputChange(userData, setUserData)('email')}
                                         disabled={!isEditing}
                                         className="m-1"
                                     />
@@ -161,11 +201,22 @@ const UserDetails = () => {
                                 </Button>
                             </Box>
                         )}
+
                         {tabValue === 1 && (
-                            <Box>
-                                <Typography variant="h5">Your addresses</Typography>
+                            <Box className="m-4">
+                                <div className="mb-3">
+                                    <Typography variant="h5">Your addresses</Typography>
+                                    <AddressList user_id={user.id}/>
+                                </div>
+
+                                <div className="mb-3">
+                                    <Button variant='contained' color='primary' onClick={() => setIsOpen(true)}>
+                                        Add address
+                                    </Button>
+                                </div>
                             </Box>
                         )}
+                        
                         {tabValue === 2 && (
                             <Box>
                                 <Typography variant="h5">Your orders</Typography>

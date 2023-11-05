@@ -6,6 +6,7 @@ const PasswordChangeForm = ({ formData, handleInputChange}) => {
         <div>
             <TextField
                 label="New Password"
+                type="password"
                 value={formData.password || ''}
                 onChange={handleInputChange('password')}
                 fullWidth
