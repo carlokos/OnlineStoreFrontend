@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Image from 'react-bootstrap/Image'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -9,6 +9,8 @@ import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import ProductDialog from "../../FormDialog/ProductDialog";
 import { Link } from "react-router-dom";
+import { CartContext } from "../../cart/ShoppingCartContext";
+import { addToCart } from "../../cart/CartLogic";
 
 const StyledCard = styled(Card)({
     maxWidth: 345,
@@ -21,6 +23,7 @@ const StyledCard = styled(Card)({
 
 function ProductCard(product) {
     const [isDialogOpen, setDialogOpen] = useState(false);
+    const [cart, setCart] = useContext(CartContext);
 
     const handleDeleteClick = (event) => {
         event.preventDefault();
@@ -30,7 +33,11 @@ function ProductCard(product) {
     const handleCancelDelete = () => {
         setDialogOpen(false);
     };
- 
+
+    const handleAddToCart = (product) => {
+        addToCart(product, setCart);
+    };
+
     return (
         <StyledCard>
             <Image className="card-img-top" src="https://picsum.photos/300/200" alt="Card image cap" thumbnail />
@@ -49,18 +56,18 @@ function ProductCard(product) {
                     </Link>
                 </Button>
 
-                <Button size="small">Add to cart</Button>
+                <Button size="small" onClick={() => handleAddToCart(product)}>Add to cart</Button>
 
                 <Button
                     size="small"
                     variant="outlined"
                     color="secondary"
-                    startIcon={<EditIcon/>}
+                    startIcon={<EditIcon />}
                     onClick={handleDeleteClick}>
                     Edit
                 </Button>
-                
-                <ProductDialog 
+
+                <ProductDialog
                     open={isDialogOpen ? true : false}
                     onClose={handleCancelDelete}
                     id={product.id}

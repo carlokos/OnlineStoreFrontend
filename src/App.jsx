@@ -8,21 +8,26 @@ import Login from './pages/login/login'
 import SignUp from './pages/signup/signup'
 import AddGoods from './pages/addGoods/addGoods'
 import UserDetails from './pages/userDetails/userDetails'
+import { ShoppingCartContext } from './components/cart/ShoppingCartContext'
+import CartPage from './pages/cartPage/CartPage'
 
 function App() {
   return (
     <>
-    <Router>
-    <NavBar/>
-      <Routes>
-        <Route exact path='/' element={<Home/>} />
-        <Route exact path='/productview/:id' element={<ProductView/>} />
-        <Route exact path='/login' element={<Login/>}/>
-        <Route exact path='/signup' element={<SignUp/>}/>
-        <Route exact path='/addGoods' element={<AddGoods/>}/>
-        <Route exact path='/profile' element={<UserDetails/>}/>
-      </Routes>
-    </Router>
+      <ShoppingCartContext>
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route exact path='/' element={<Home />} />
+            <Route exact path='/productview/:id' element={<ProductView />} />
+            <Route exact path='/login' element={<Login />} />
+            <Route exact path='/signup' element={<SignUp />} />
+            <Route exact path='/addGoods' element={<AddGoods />} />
+            <Route exact path='/profile' element={<UserDetails />} />
+            <Route exacth path='/cart' element={<CartPage/>}/>
+          </Routes>
+        </Router>
+      </ShoppingCartContext>
     </>
   )
 }

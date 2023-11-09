@@ -40,11 +40,15 @@ const signup = (name, subname, email, password) => {
 };
 
 const loadCurrentUser = (token) => {
-    return axios.get(`${API_URL}users/current`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    });
+    try{
+        return axios.get(`${API_URL}users/current`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+    } catch (error) {
+        return null;
+    }
 }
 
 const UserService = {

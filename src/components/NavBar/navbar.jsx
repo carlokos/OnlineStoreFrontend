@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
@@ -8,14 +8,25 @@ import UserService from '../../services/userService';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { CartContext } from '../cart/ShoppingCartContext';
+import { loadCartFromLocalStorage } from '../cart/CartLogic';
 
 export default function NavBar() {
     const [user, setUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [cart, setCart] = useContext(CartContext);
+    const quantity = cart.reduce((acc, curr) => {
+        return acc + curr.quantity;
+    }, 0);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
+    useEffect(() => {
+        const savedCart = loadCartFromLocalStorage();
+        setCart(savedCart);
+    }, [setCart]);
 
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -53,7 +64,6 @@ export default function NavBar() {
                 Bootstrap
             </Link>
 
-            {/* Navbar Toggler Button for Small Screens */}
             <button
                 className="navbar-toggler"
                 type="button"
@@ -122,8 +132,9 @@ export default function NavBar() {
             </div>
 
             <div className="cart">
-                <Link className="btn btn-link" to="/">
+                <Link className="btn btn-link" to="/cart">
                     <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+                    <span className="cart-count">{quantity}</span>
                 </Link>
             </div>
         </nav>
