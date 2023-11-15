@@ -12,6 +12,10 @@ const updateCart = (cartData) => {
     return axios.put(`${API_URL}cart/${id}`, cartData);
 }
 
+const addQuantityToCart = (userId, productId) => {
+    return axios.put(`${API_URL}cart/${userId}/${productId}`);
+}
+
 const deleteCart = (id) => {
     console.log(id);
     return axios.delete(`${API_URL}cart/${id}`);
@@ -21,11 +25,17 @@ const addCart = (cartData) => {
     return axios.post(`${API_URL}cart`, cartData);
 }
 
+const clearUserCart = (id) => {
+    return axios.delete(`${API_URL}cart/user/${id}`);
+}
+
 const CartService = {
     getUserCart,
     updateCart,
+    addQuantityToCart,
     deleteCart,
-    addCart
+    addCart,
+    clearUserCart
 }
 
 export default CartService;

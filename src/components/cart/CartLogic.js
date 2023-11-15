@@ -1,5 +1,6 @@
 import UserService from "../../services/userService";
 import CartService from "../../services/cartService";
+import ProductService from "../../services/productService";
 import Cookies from 'js-cookie';
 
 const getUserId = async () => {
@@ -19,6 +20,10 @@ export const addToCart = async (product) => {
 
   if (existingItem) {
     existingItem.quantity += 1;
+    if(userId !== 0){
+      console.log("product ID: ", product.id);
+      await CartService.addQuantityToCart(userId, product.id);
+    }
   } else {
     const newItem = { product_id: product.id, quantity: 1, user_id: userId };
     cart.push(newItem);
@@ -107,3 +112,20 @@ export const setUserCart = async () => {
     return Cookies.set('cart', JSON.stringify(response.data), { expires: 7 });
   }
 }
+
+export const getTotalPrice = async () => {
+  const cart = Cookies.getJSON('cart') || [];
+  let totalPrice = 0;
+
+  const pricePromises = cart.map(async (item) => {
+    const product = await ProductService.getProduct(item.product_id);
+    const productPrice = product.data.price;
+
+    return productPrice * item.quantity;
+  });
+
+  const prices = await Promise.all(pricePromises);
+  totalPrice = prices.reduce((acc, price) => acc + price, 0);
+
+  return totalPrice;
+};

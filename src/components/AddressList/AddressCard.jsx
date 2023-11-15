@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import AddressDialog from "../FormDialog/AdressForm/AddressDialog";
+import Cookies from "js-cookie";
 
 const StyledCard = styled(Card)({
     maxWidth: 345,
@@ -13,12 +14,13 @@ const StyledCard = styled(Card)({
     cursor:"pointer",
 });
 
-function AddressCard({ address, sendAddress }) {
+function AddressCard({ address, onSelectAddress }) {
     const [isOpen, setIsOpen] = useState(false);
     
     const handleCardClick = () => {
-        if(sendAddress){
-            sendAddress(address.id);
+        if(onSelectAddress){
+            Cookies.set("addressId", address.id, {expires: 1});
+            onSelectAddress()
         } else{
             setIsOpen(true);
         }

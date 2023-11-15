@@ -12,17 +12,19 @@ import {
 import ChooseAddress from './chooseAddress';
 import ChooseOrderPayment from './chooseOrderPayment';
 import ConfirmOrder from './ConfirmOrder';
+import Cookies from 'js-cookie';
+import OrderService from '../../services/OrderService';
+import CartService from '../../services/cartService';
 
 function DialogStepper({ open, onClose, user_id }) {
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedAddress, setSelectedAddress] = useState(null);
   const [order, setOrder] = useState({
     paymentStatus: 'paid',
     orderStatus: 'delivered',
     userId: user_id,
     addressId: null,
-    paymentId: 1, 
-    deliveryMethodId: 1, 
+    paymentId: null, 
+    deliveryMethodId: null, 
   });
 
   const handleSelectOrderPayment = ({ paymentMethod, deliveryMethod }) => {
@@ -33,27 +35,31 @@ function DialogStepper({ open, onClose, user_id }) {
     }));
   };
 
+  const atChooseAddress = () => {
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      addressId: Cookies.get("addressId"),
+    }));
+    handleNext();
+  }
+
   const steps = [
-    { label: 'Choose an address', component: <ChooseAddress user_id={user_id} sendAddress={(address) => setSelectedAddress(address)} 
-    handleNext={() => setActiveStep((prev) => prev + 1)}/>},
+    { label: 'Choose an address', component: <ChooseAddress user_id={user_id}/>},
     { label: 'Pay now?', component: <ChooseOrderPayment /> },
-    { label: 'Confirm checkout', component: <ConfirmOrder /> },
+    { label: 'Confirm checkout', component: <ConfirmOrder/> },
   ];
 
   const handleNext = () => {
+    if(activeStep === steps.length - 1) {
+      OrderService.addOrder(order);
+      window.location.reload();
+      CartService.clearUserCart(user_id);
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  const viewOrder = () => {
-    console.log(order);
   };
 
   return (
@@ -71,9 +77,7 @@ function DialogStepper({ open, onClose, user_id }) {
         <div>
           {activeStep === steps.length ? (
             <div>
-              <Typography>Todos los pasos completados. ¡Listo!</Typography>
-              <Button onClick={handleReset}>Reiniciar</Button>
-              {viewOrder()}
+              <Typography>Order completed</Typography>
             </div>
           ) : (
             <div>
@@ -81,6 +85,7 @@ function DialogStepper({ open, onClose, user_id }) {
                 user_id,
                 order,
                 onSelect: handleSelectOrderPayment,
+                onSelectAddress: atChooseAddress,
                 handleNext,
                 handleBack,
               })}

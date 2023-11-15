@@ -3,7 +3,7 @@ import AddressCard from "./AddressCard";
 import { List, ListItem } from "@mui/material";
 import AddressService from "../../services/adresssService";
 
-function AddressList( {user_id, sendAddress} ) {
+function AddressList( { user_id, onSelectAddress } ) {
     const [userAddressses, setUserAdresses] = useState([]);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ function AddressList( {user_id, sendAddress} ) {
                 <ListItem key={address.id}>
                     <AddressCard
                         address={address}
-                        sendAddress={sendAddress}
+                        onSelectAddress={onSelectAddress}
                     />
                 </ListItem>
             ))}
