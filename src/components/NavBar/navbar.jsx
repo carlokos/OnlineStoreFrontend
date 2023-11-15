@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
@@ -8,31 +8,26 @@ import UserService from '../../services/userService';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { CartContext } from '../cart/ShoppingCartContext';
-import { loadCartFromLocalStorage } from '../cart/CartLogic';
+import { getCart, getTotalQuantity} from '../cart/CartLogic';
+import Cookies from "js-cookie";
+
 
 export default function NavBar() {
     const [user, setUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [cart, setCart] = useContext(CartContext);
-    const quantity = cart.reduce((acc, curr) => {
-        return acc + curr.quantity;
-    }, 0);
+    const [cart, setCart] = useState(null);
+    const [quantity, setQuantity] = useState(0);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
-    useEffect(() => {
-        const savedCart = loadCartFromLocalStorage();
-        setCart(savedCart);
-    }, [setCart]);
 
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
 
     const handleLogOut = () => {
+        Cookies.remove('cart');
         localStorage.removeItem('token');
         window.location.href = '/'
     }
@@ -40,16 +35,24 @@ export default function NavBar() {
     useEffect(() => {
         const token = localStorage.getItem('token');
 
-        if (token && !user) {
-            UserService.loadCurrentUser(token)
-                .then(response => {
+        const fetchData = async () => {
+            if (token && !user) {
+                try {
+                    const response = await UserService.loadCurrentUser(token);
                     setUser(response.data);
-                })
-                .catch(error => {
-                    console.error('Error al cargar al usuario');
-                })
-        }
-    }, [])
+                } catch (error) {
+                    console.error('Error al cargar al usuario:', error);
+                }
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        setCart(getCart);
+        setQuantity(getTotalQuantity());
+    }, [cart]);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">

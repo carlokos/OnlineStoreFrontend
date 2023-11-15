@@ -8,14 +8,14 @@ import Login from './pages/login/login'
 import SignUp from './pages/signup/signup'
 import AddGoods from './pages/addGoods/addGoods'
 import UserDetails from './pages/userDetails/userDetails'
-import { ShoppingCartContext } from './components/cart/ShoppingCartContext'
 import CartPage from './pages/cartPage/CartPage'
+import { ShoppingCartContext } from './components/cart/ShoppinCartContext'
 
 function App() {
   return (
     <>
-      <ShoppingCartContext>
-        <Router>
+      <Router>
+        <ShoppingCartContext>
           <NavBar />
           <Routes>
             <Route exact path='/' element={<Home />} />
@@ -24,10 +24,10 @@ function App() {
             <Route exact path='/signup' element={<SignUp />} />
             <Route exact path='/addGoods' element={<AddGoods />} />
             <Route exact path='/profile' element={<UserDetails />} />
-            <Route exacth path='/cart' element={<CartPage/>}/>
+            <Route exacth path='/cart' element={<CartPage />} />
           </Routes>
-        </Router>
-      </ShoppingCartContext>
+        </ShoppingCartContext>
+      </Router>
     </>
   )
 }

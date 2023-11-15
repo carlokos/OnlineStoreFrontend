@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Image from 'react-bootstrap/Image'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -9,7 +9,6 @@ import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import ProductDialog from "../../FormDialog/ProductDialog";
 import { Link } from "react-router-dom";
-import { CartContext } from "../../cart/ShoppingCartContext";
 import { addToCart } from "../../cart/CartLogic";
 
 const StyledCard = styled(Card)({
@@ -23,7 +22,6 @@ const StyledCard = styled(Card)({
 
 function ProductCard(product) {
     const [isDialogOpen, setDialogOpen] = useState(false);
-    const [cart, setCart] = useContext(CartContext);
 
     const handleDeleteClick = (event) => {
         event.preventDefault();
@@ -35,7 +33,7 @@ function ProductCard(product) {
     };
 
     const handleAddToCart = (product) => {
-        addToCart(product, setCart);
+        addToCart(product);
     };
 
     return (

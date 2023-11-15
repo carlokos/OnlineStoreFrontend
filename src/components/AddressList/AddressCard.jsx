@@ -13,11 +13,15 @@ const StyledCard = styled(Card)({
     cursor:"pointer",
 });
 
-function AddressCard({ address }) {
+function AddressCard({ address, sendAddress }) {
     const [isOpen, setIsOpen] = useState(false);
     
     const handleCardClick = () => {
-        setIsOpen(true);
+        if(sendAddress){
+            sendAddress(address.id);
+        } else{
+            setIsOpen(true);
+        }
     };
 
     return (

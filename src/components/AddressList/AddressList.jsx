@@ -3,7 +3,7 @@ import AddressCard from "./AddressCard";
 import { List, ListItem } from "@mui/material";
 import AddressService from "../../services/adresssService";
 
-function AddressList( {user_id} ) {
+function AddressList( {user_id, sendAddress} ) {
     const [userAddressses, setUserAdresses] = useState([]);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ function AddressList( {user_id} ) {
         };
     
         fetchUserAddresses();
-      }, [user_id]);
+      }, []);
 
     return(
         <List style={{ maxHeight: "500px", overflowY: "auto" }}>
@@ -25,6 +25,7 @@ function AddressList( {user_id} ) {
                 <ListItem key={address.id}>
                     <AddressCard
                         address={address}
+                        sendAddress={sendAddress}
                     />
                 </ListItem>
             ))}

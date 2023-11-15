@@ -1,14 +1,16 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import CartList from "../../components/cart/cartList";
 import CartService from "../../services/cartService";
 import UserService from "../../services/userService";
-import { CartContext } from "../../components/cart/ShoppingCartContext";
+import Cookies from 'js-cookie';
+import { getCart } from "../../components/cart/CartLogic";
+import { Button, Paper } from '@mui/material';
+import DialogStepper from "../../components/Stepper/Stepper";
 
 const CartPage = () => {
     const [cart, setCart] = useState([]);
-    const [userId, setUserId] = useState(null);
-    const localCart = localStorage.getItem('cart');
-    const [, updateCartContext] = useContext(CartContext);
+    const [userId, setUserId] = useState();
+    const [showStepper, setShowStepper] = useState(false);
 
     useEffect(() => {
         const fetchUserCart = async () => {
@@ -21,25 +23,44 @@ const CartPage = () => {
                     setUserId(userId);
 
                     const response = await CartService.getUserCart(userId);
-                    console.log(response.data);
+                    Cookies.remove('cart');
+                    Cookies.set('cart', JSON.stringify(response.data), { expires: 7 });
                     setCart(response.data);
-
-                    // Actualizar el contexto con el nuevo estado del carrito
-                    updateCartContext(response.data);
                 }
             } catch (error) {
                 console.error("Error fetching user cart: ", error);
             }
         };
-
+        
         fetchUserCart();
-    }, [updateCartContext]);
+    }, []);
+
+    useEffect(() => {
+        setCart(getCart);
+    }, [cart])
+
+    const handleCheckoutClick = () => {
+        setShowStepper(true);
+    };
+
+    const handleCloseStepper = () => {
+        setShowStepper(false);
+    };
 
     return (
-        <div>
-            <CartList cart={cart} />
+        <div className="d-flex justify-content-center align-items-center vw-100 vh-100">
+            <CartList cart={cart} style={{ margin: '16px' }}/>
+            <Paper elevation={3} style={{ padding: '16px', margin: '16px' }}>
+                <Button variant="contained" color="success" onClick={handleCheckoutClick}>
+                    Checkout
+                </Button>
+            </Paper>
+
+            {showStepper && (
+                <DialogStepper open={showStepper} onClose={handleCloseStepper} user_id={userId} />
+            )}
         </div>
-    )
+    );
 };
 
 export default CartPage;

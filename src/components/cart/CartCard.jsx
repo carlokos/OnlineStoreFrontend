@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import ProductService from '../../services/productService';
-import { CartContext } from './ShoppingCartContext';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { removeFromCart, increaseQuantity, decreaseQuantity } from './CartLogic';
+import { removeFromCart, increaseQuantity, decreaseQuantity, getCart } from './CartLogic';
 
 const CartCard = ({ productId, id }) => {
     const [productDetails, setProductDetails] = useState(null);
-    const [cart, setCart] = useContext(CartContext);
 
     useEffect(() => {
         const fetchProductDetails = async () => {
@@ -27,14 +25,13 @@ const CartCard = ({ productId, id }) => {
     }, [productId]);
 
     const getProductQuantity = () => {
-        console.log("cartId: ", id);
-        console.log("cart: ", cart);
+        const cart = getCart();
         const cartItem = cart.find(item => item.product_id === productId);
         return cartItem ? cartItem.quantity : 0;
     };
 
     return (
-        <Card>
+        <Card style={{ marginBottom: '16px' }}>
             <CardContent>
                 {productDetails && (
                     <>
@@ -42,16 +39,16 @@ const CartCard = ({ productId, id }) => {
                             {productDetails.title}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Price: ${productDetails.price} 
+                            Price: ${productDetails.price}
                         </Typography>
-                        <IconButton onClick={() => removeFromCart(productId, id, setCart)}>
+                        <IconButton onClick={() => removeFromCart(productId, id)}>
                             <ClearIcon />
                         </IconButton>
-                        <IconButton onClick={() => increaseQuantity(productId, id, setCart)}>
+                        <IconButton onClick={() => increaseQuantity(productId)}>
                             <ArrowUpwardIcon />
                         </IconButton>
                         {getProductQuantity()}
-                        <IconButton onClick={() => decreaseQuantity(productId, id, setCart)}>
+                        <IconButton onClick={() => decreaseQuantity(productId)}>
                             <ArrowDownwardIcon />
                         </IconButton>
                     </>

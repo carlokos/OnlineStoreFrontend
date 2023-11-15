@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import UserService from "../../services/userService";
 import AlertMessageComponent from "../../components/AlertMessageComponent/AlertMessageComponent";
 import { useNavigate } from 'react-router-dom';
+import { asignCartToCurrentUser } from "../../components/cart/CartLogic";
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,32 +14,31 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         try {
-            const response = UserService.login(email, password)
-                .then(response => {
-                    if (response.status === 200) {
-                        const token = response.data.accessToken;
-                        localStorage.setItem("token", token);
+            const response = await UserService.login(email, password);
 
-                        setMessage("Loggin successfully");
-                        setSeverity("success");
-                        setShowAlert(true);
+            if (response.status === 200) {
+                const token = response.data.accessToken;
+                localStorage.setItem("token", token);
 
-                        navigate('/');
-                        window.location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                    setMessage("Email or password incorrect");
-                    setSeverity("error");
-                    setShowAlert(true);
-                })
+                await asignCartToCurrentUser();
+
+                setMessage("Login successfully");
+                setSeverity("success");
+                setShowAlert(true);
+
+                navigate('/');
+                window.location.reload();
+            }
         } catch (error) {
-            console.error('Cannot log in correctly', error.message);
+            console.error('Error during login:', error);
+
+            setMessage("Email or password incorrect");
+            setSeverity("error");
+            setShowAlert(true);
         }
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +48,7 @@ function Login() {
     return (
         <div className="login template d-flex justify-content-center align-items-center vw-100 vh-100 bg-primary">
             <div>
-                <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
+                <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)} />
             </div>
 
             <div className="form_container p-5 rounded b bg-white">
