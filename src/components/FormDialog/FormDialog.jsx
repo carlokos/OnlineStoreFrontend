@@ -38,13 +38,15 @@ export default function FormDialog({ open, onClose, dataForm, updateItem, delete
                         handleInputChange: dataForm.handleInputChange || defaultHandleInputChange,
                         isValid: dataForm.isValid,
                     })}
+                    {updateItem && (
                     <Button variant="contained" color="primary" onClick={updateItem} style={{ marginRight: '8px' }}>
                         Commit
-                    </Button>
+                    </Button>)}
 
+                    {onClose && (
                     <Button variant="contained" color="secondary" onClick={onClose} style={{ marginRight: '8px' }}>
                         Cancel
-                    </Button>
+                    </Button>)}
 
                     {deleteItem && (  
                         <IconButton

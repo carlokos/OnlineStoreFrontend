@@ -9,6 +9,7 @@ import PasswordChangeForm from '../../components/FormDialog/userForm/PasswordCha
 import AddressList from '../../components/AddressList/AddressList';
 import AddressForm from '../../components/FormDialog/AdressForm/AddressForm';
 import AddressService from '../../services/adresssService';
+import OrderList from '../../components/Order/OrderList';
 
 const UserDetails = () => {
     const [tabValue, setTabValue] = useState(0);
@@ -129,6 +130,7 @@ const UserDetails = () => {
         };
     } else if (tabValue === 2) {
         formDialogProps = {
+            open: isOpen ? true : false,
         };
     }
 
@@ -220,6 +222,7 @@ const UserDetails = () => {
                         {tabValue === 2 && (
                             <Box>
                                 <Typography variant="h5">Your orders</Typography>
+                                <OrderList user_id={user.id}/>
                             </Box>
                         )}
                     </Box>

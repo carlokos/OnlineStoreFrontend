@@ -19,6 +19,18 @@ const deleteOrderDetail = (id) => {
     return axios.delete(`${API_URL}orderDetail/${id}`);
 }
 
+const getOrderCount = (id) => {
+    return axios.get(`${API_URL}orderDetail/count/${id}`);
+}
+
+const getTotalOrderPrice = (id) => {
+    return axios.get(`${API_URL}orderDetail/totalOrderPrice/${id}`);
+}
+
+const getTotalPrice = (id) => {
+    return axios.get(`${API_URL}orderDetail/totalPrice/${id}`);
+}
+
 const addOrderDetail = async (orderId, cart) => {
     const orderDetailsData = cart.map((cartItem) => ({
         orderId: orderId,
@@ -34,7 +46,10 @@ const OrderDetailsService = {
     getAllOrderDetails,
     updateOrderDetail,
     deleteOrderDetail,
-    addOrderDetail
+    addOrderDetail,
+    getOrderCount,
+    getTotalOrderPrice,
+    getTotalPrice
 };
 
 export default OrderDetailsService;
