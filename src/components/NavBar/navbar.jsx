@@ -8,14 +8,13 @@ import UserService from '../../services/userService';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { getCart, getTotalQuantity} from '../cart/CartLogic';
+import { getTotalQuantity} from '../cart/CartLogic';
+import { addListener, quitListener } from '../cart/cartListener';
 import Cookies from "js-cookie";
-
 
 export default function NavBar() {
     const [user, setUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [cart, setCart] = useState(null);
     const [quantity, setQuantity] = useState(0);
 
     const handleMenuClick = (event) => {
@@ -32,6 +31,13 @@ export default function NavBar() {
         window.location.href = '/'
     }
 
+    const handleCartUpdate = (event) => {
+        const newQuantity = Number(event.detail);  
+        if (!isNaN(newQuantity)) {
+            setQuantity(newQuantity);
+        }
+    };
+
     useEffect(() => {
         const token = localStorage.getItem('token');
 
@@ -41,7 +47,7 @@ export default function NavBar() {
                     const response = await UserService.loadCurrentUser(token);
                     setUser(response.data);
                 } catch (error) {
-                    console.error('Error al cargar al usuario:', error);
+                    console.error('Error fetching user: ', error);
                 }
             }
         };
@@ -50,9 +56,15 @@ export default function NavBar() {
     }, []);
 
     useEffect(() => {
-        setCart(getCart);
+        addListener('CART_UPDATED', handleCartUpdate);
+        return () => {
+            quitListener('CART_UPDATED', handleCartUpdate);
+        };
+    }, []);
+
+    useEffect(() => {
         setQuantity(getTotalQuantity());
-    }, [cart]);
+    }, []); 
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">

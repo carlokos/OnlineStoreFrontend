@@ -14,7 +14,8 @@ import ChooseOrderPayment from './chooseOrderPayment';
 import ConfirmOrder from './ConfirmOrder';
 import Cookies from 'js-cookie';
 import OrderService from '../../services/OrderService';
-import CartService from '../../services/cartService';
+import OrderDetailsService from '../../services/OrderDetailsService';
+import { clearUserCart, getCart } from '../cart/CartLogic';
 
 function DialogStepper({ open, onClose, user_id }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -49,11 +50,12 @@ function DialogStepper({ open, onClose, user_id }) {
     { label: 'Confirm checkout', component: <ConfirmOrder/> },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if(activeStep === steps.length - 1) {
-      OrderService.addOrder(order);
+      const orderId = await OrderService.addOrder(order);
+      await OrderDetailsService.addOrderDetail(orderId, getCart());
+      clearUserCart(user_id)
       window.location.reload();
-      CartService.clearUserCart(user_id);
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };

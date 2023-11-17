@@ -2,7 +2,9 @@ import UserService from "../../services/userService";
 import CartService from "../../services/cartService";
 import ProductService from "../../services/productService";
 import Cookies from 'js-cookie';
+import { publish } from "./cartListener";
 
+//return 0 is user is not authenticated
 const getUserId = async () => {
   try {
     const token = localStorage.getItem('token');
@@ -32,6 +34,7 @@ export const addToCart = async (product) => {
     }
   }
   Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+  publish('CART_UPDATED', getTotalQuantity());
 };
 
 export const asignCartToCurrentUser = async () => {
@@ -44,10 +47,12 @@ export const asignCartToCurrentUser = async () => {
     const updatedItem = { ...item, user_id: userId };
     if (userId !== 0) {
       newCart.push(updatedItem);
-      console.log(newCart);
       await CartService.addCart(updatedItem);
     }
   }
+  Cookies.remove('cart');
+  const response = await CartService.getUserCart(userId);
+  Cookies.set('cart', JSON.stringify(response.data), { expires: 7 });
 }
 
 export const removeFromCart = async (productId, id) => {
@@ -58,6 +63,7 @@ export const removeFromCart = async (productId, id) => {
 
   Cookies.remove('cart');
   Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 });
+  publish('CART_UPDATED', getTotalQuantity());
   return updatedCart;
 };
 
@@ -73,6 +79,7 @@ export const increaseQuantity = async (productId) => {
   }));
 
   Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 });
+  publish('CART_UPDATED', getTotalQuantity());
   return updatedCart;
 };
 
@@ -81,14 +88,19 @@ export const decreaseQuantity = async (productId) => {
   const updatedCart = await Promise.all(cart.map(async (item) => {
     if (item.product_id === productId) {
       const updatedItem = { ...item, quantity: Math.max(0, item.quantity - 1) };
-      await CartService.updateCart(updatedItem);
-      return updatedItem;
+      if (updatedItem.quantity === 0) {
+        await CartService.deleteCart(item.id);
+      } else {
+        await CartService.updateCart(updatedItem);
+      }
+      return updatedItem.quantity > 0 ? updatedItem : null;
     }
     return item;
   }));
-
-  Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 });
-  return updatedCart.filter((item) => item.quantity > 0);
+  const filteredCart = updatedCart.filter((item) => item !== null);
+  Cookies.set('cart', JSON.stringify(filteredCart), { expires: 7 });
+  publish('CART_UPDATED', getTotalQuantity());
+  return filteredCart;
 };
 
 export const getCart = () => {
@@ -111,6 +123,11 @@ export const setUserCart = async () => {
     Cookies.remove('cart');
     return Cookies.set('cart', JSON.stringify(response.data), { expires: 7 });
   }
+}
+
+export const clearUserCart = async (userId) => {
+  CartService.clearUserCart(userId);
+  Cookies.remove('cart');
 }
 
 export const getTotalPrice = async () => {

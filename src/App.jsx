@@ -9,13 +9,11 @@ import SignUp from './pages/signup/signup'
 import AddGoods from './pages/addGoods/addGoods'
 import UserDetails from './pages/userDetails/userDetails'
 import CartPage from './pages/cartPage/CartPage'
-import { ShoppingCartContext } from './components/cart/ShoppinCartContext'
 
 function App() {
   return (
     <>
       <Router>
-        <ShoppingCartContext>
           <NavBar />
           <Routes>
             <Route exact path='/' element={<Home />} />
@@ -26,7 +24,6 @@ function App() {
             <Route exact path='/profile' element={<UserDetails />} />
             <Route exacth path='/cart' element={<CartPage />} />
           </Routes>
-        </ShoppingCartContext>
       </Router>
     </>
   )

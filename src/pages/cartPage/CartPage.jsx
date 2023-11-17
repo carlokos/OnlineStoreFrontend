@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import CartList from "../../components/cart/cartList";
-import CartService from "../../services/cartService";
 import UserService from "../../services/userService";
-import Cookies from 'js-cookie';
 import { getCart } from "../../components/cart/CartLogic";
 import { Button, Paper } from '@mui/material';
 import DialogStepper from "../../components/Stepper/Stepper";
+import { addListener, quitListener } from "../../components/cart/cartListener";
+import CartService from "../../services/cartService";
+import Cookies from "js-cookie";
 
 const CartPage = () => {
     const [cart, setCart] = useState([]);
@@ -13,6 +14,11 @@ const CartPage = () => {
     const [showStepper, setShowStepper] = useState(false);
 
     useEffect(() => {
+        const handleCartUpdate = () => {
+            setCart(getCart());
+        };
+        addListener('CART_UPDATED', handleCartUpdate);
+
         const fetchUserCart = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -21,7 +27,7 @@ const CartPage = () => {
                 if (userData.data) {
                     const userId = userData.data.id;
                     setUserId(userId);
-
+                    
                     const response = await CartService.getUserCart(userId);
                     Cookies.remove('cart');
                     Cookies.set('cart', JSON.stringify(response.data), { expires: 7 });
@@ -33,11 +39,11 @@ const CartPage = () => {
         };
         
         fetchUserCart();
-    }, []);
 
-    useEffect(() => {
-        setCart(getCart);
-    }, [cart])
+        return () => {
+            quitListener('CART_UPDATED', handleCartUpdate);
+        };
+    }, []);
 
     const handleCheckoutClick = () => {
         setShowStepper(true);
