@@ -9,6 +9,7 @@ import SignUp from './pages/signup/signup'
 import AddGoods from './pages/addGoods/addGoods'
 import UserDetails from './pages/userDetails/userDetails'
 import CartPage from './pages/cartPage/CartPage'
+import OrderManager from './pages/OrderManager/OrderManager'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route exact path='/addGoods' element={<AddGoods />} />
             <Route exact path='/profile' element={<UserDetails />} />
             <Route exacth path='/cart' element={<CartPage />} />
+            <Route exact path='/orderManager' element={<OrderManager/>}/>
           </Routes>
       </Router>
     </>

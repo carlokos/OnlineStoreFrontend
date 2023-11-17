@@ -105,12 +105,12 @@ export default function NavBar() {
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/">
-                            Brands
+                            Top selling
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/">
-                            Top selling
+                        <Link className="nav-link" to="/orderManager">
+                            Orders manager
                         </Link>
                     </li>
                 </ul>

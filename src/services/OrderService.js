@@ -6,6 +6,10 @@ const getOrders = (id) => {
     return axios.get(`${API_URL}order/${id}`);
 }
 
+const getAllOrders = () => {
+    return axios.get(`${API_URL}order`);
+}
+
 const updateOrder = (orderData) => {
     const {id} = orderData;
     return axios.put(`${API_URL}order/${id}`, orderData);
@@ -22,6 +26,7 @@ const addOrder = async (orderData) => {
 
 const OrderService = {
     getOrders,
+    getAllOrders,
     updateOrder,
     deleteOrder,
     addOrder
