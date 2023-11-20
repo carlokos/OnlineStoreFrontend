@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CartList from "../../components/cart/cartList";
 import UserService from "../../services/userService";
-import { getCart } from "../../components/cart/CartLogic";
+import { getCart, getTotalPrice } from "../../components/cart/CartLogic";
 import { Button, Paper } from '@mui/material';
 import DialogStepper from "../../components/Stepper/Stepper";
 import { addListener, quitListener } from "../../components/cart/cartListener";
@@ -14,7 +14,7 @@ const CartPage = () => {
     const [showStepper, setShowStepper] = useState(false);
 
     useEffect(() => {
-        const handleCartUpdate = () => {
+        const handleCartUpdate = async() => {
             setCart(getCart());
         };
         addListener('CART_UPDATED', handleCartUpdate);
@@ -63,7 +63,7 @@ const CartPage = () => {
             </Paper>
 
             {showStepper && (
-                <DialogStepper open={showStepper} onClose={handleCloseStepper} user_id={userId} />
+                <DialogStepper open={showStepper} onClose={handleCloseStepper} user_id={userId}/>
             )}
         </div>
     );

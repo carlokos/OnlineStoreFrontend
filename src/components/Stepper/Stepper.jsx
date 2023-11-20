@@ -22,6 +22,8 @@ function DialogStepper({ open, onClose, user_id }) {
   const [order, setOrder] = useState({
     paymentStatus: 'paid',
     orderStatus: 'delivered',
+    totalPrice: null,
+    orderDate: new Date().toISOString(),
     userId: user_id,
     addressId: null,
     paymentId: null, 
@@ -33,6 +35,13 @@ function DialogStepper({ open, onClose, user_id }) {
       ...prevOrder,
       paymentId: paymentMethod,
       deliveryMethodId: deliveryMethod,
+    }));
+  };
+
+  const updateOrderTotalPrice = (price) => {
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      totalPrice: price,
     }));
   };
 
@@ -90,6 +99,7 @@ function DialogStepper({ open, onClose, user_id }) {
                 onSelectAddress: atChooseAddress,
                 handleNext,
                 handleBack,
+                updateOrderTotalPrice,
               })}
 
               <div style={{ marginTop: '20px' }}>

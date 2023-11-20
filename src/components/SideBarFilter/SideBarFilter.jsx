@@ -18,7 +18,19 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
   const [selectedCategory, setSelectedCategory] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
-  const [editCategoryId, setEditCategoryId] = useState(null);;
+  const [editCategoryId, setEditCategoryId] = useState(null);
+
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const getRoles = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        setRoles(localStorage.getItem('roles'));
+      }
+    }
+    getRoles();
+  }, [])
 
   useEffect(() => {
     CategoryService.getCategories()
@@ -82,6 +94,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
               onChange={() => handleCheckboxChange(category.id)}
             />
             <ListItemText primary={category.name} />
+            { roles.includes(1) && (
             <IconButton
               edge="end"
               aria-label="edit"
@@ -90,6 +103,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
             >
               <EditIcon />
             </IconButton>
+            )}
           </ListItem>
         ))}
       </List>

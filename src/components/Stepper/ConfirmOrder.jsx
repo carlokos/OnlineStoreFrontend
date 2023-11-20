@@ -2,13 +2,14 @@ import React, {useState, useEffect} from 'react';
 import { Typography, Box } from '@mui/material';
 import { getTotalPrice } from '../cart/CartLogic'; 
 
-const ConfirmOrder = () => {
+const ConfirmOrder = ({updateOrderTotalPrice}) => {
   const [totalPrice, setTotalPrice] = useState(null);
 
   useEffect(() => {
     const fetchTotalPrice = async () => {
       const price = await getTotalPrice();
       setTotalPrice(price);
+      updateOrderTotalPrice(price);
     };
 
     fetchTotalPrice();

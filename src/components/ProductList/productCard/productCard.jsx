@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from 'react-bootstrap/Image'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -22,6 +22,17 @@ const StyledCard = styled(Card)({
 
 function ProductCard(product) {
     const [isDialogOpen, setDialogOpen] = useState(false);
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        const getRoles = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                setRoles(localStorage.getItem('roles'));
+            }
+        }
+        getRoles();
+    }, [])
 
     const handleDeleteClick = (event) => {
         event.preventDefault();
@@ -56,14 +67,16 @@ function ProductCard(product) {
 
                 <Button size="small" onClick={() => handleAddToCart(product)}>Add to cart</Button>
 
-                <Button
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                    startIcon={<EditIcon />}
-                    onClick={handleDeleteClick}>
-                    Edit
-                </Button>
+                {roles.includes(1) && (
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        color="secondary"
+                        startIcon={<EditIcon />}
+                        onClick={handleDeleteClick}>
+                        Edit
+                    </Button>
+                )}
 
                 <ProductDialog
                     open={isDialogOpen ? true : false}

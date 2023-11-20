@@ -13,9 +13,21 @@ function ProductPage() {
    */
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-  
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const getRoles = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        setRoles(localStorage.getItem('roles'));
+      }
+    }
+    getRoles();
+  }, [])
 
   useEffect(() => {
     fetchProducts();
@@ -72,15 +84,17 @@ function ProductPage() {
         </div>
       </div>
 
-      <Link to={"/addGoods"}>
-        <Fab
-          color="primary"
-          aria-label="add"
-          style={{ position: 'fixed', bottom: 10, right: 25 }}
-        >
-          <AddIcon/>
-        </Fab>
-      </Link>
+      {roles.includes(1) && (
+        <Link to={"/addGoods"}>
+          <Fab
+            color="primary"
+            aria-label="add"
+            style={{ position: 'fixed', bottom: 10, right: 25 }}
+          >
+            <AddIcon />
+          </Fab>
+        </Link>
+      )}
     </div>
   );
 }

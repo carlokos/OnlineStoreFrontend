@@ -16,6 +16,7 @@ export default function NavBar() {
     const [user, setUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [quantity, setQuantity] = useState(0);
+    const [roles, setRoles] = useState([]);
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -28,6 +29,7 @@ export default function NavBar() {
     const handleLogOut = () => {
         Cookies.remove('cart');
         localStorage.removeItem('token');
+        localStorage.removeItem('roles');
         window.location.href = '/'
     }
 
@@ -45,6 +47,7 @@ export default function NavBar() {
             if (token && !user) {
                 try {
                     const response = await UserService.loadCurrentUser(token);
+                    setRoles(localStorage.getItem('roles'));
                     setUser(response.data);
                 } catch (error) {
                     console.error('Error fetching user: ', error);
@@ -108,11 +111,13 @@ export default function NavBar() {
                             Top selling
                         </Link>
                     </li>
+                    {roles.includes(1) && (
                     <li className="nav-item">
                         <Link className="nav-link" to="/orderManager">
                             Orders manager
                         </Link>
                     </li>
+                )}
                 </ul>
             </div>
 

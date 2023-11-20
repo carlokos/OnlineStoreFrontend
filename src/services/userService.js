@@ -12,9 +12,9 @@ const getUser = (id) => {
 
 const login = (email, password) => {
     return axios.post(`${API_URL}auth/login`,
-        JSON.stringify({email, password}),
+        JSON.stringify({ email, password }),
         {
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             withCredentials: true
         }
     )
@@ -31,16 +31,16 @@ const updatePassword = (id, password) => {
 
 const signup = (name, subname, email, password) => {
     return axios.post(`${API_URL}auth/register`,
-        JSON.stringify({name, subname, password, email}),
+        JSON.stringify({ name, subname, password, email }),
         {
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             withCredentials: true
         }
     )
 };
 
 const loadCurrentUser = (token) => {
-    try{
+    try {
         return axios.get(`${API_URL}users/current`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,14 +51,32 @@ const loadCurrentUser = (token) => {
     }
 }
 
+const loadUserRoles = (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    return axios.get(`${API_URL}auth/roles`, config)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    });
+}
+
 const UserService = {
     getUsers,
     getUser,
     login,
     signup,
     loadCurrentUser,
-    updateUser, 
-    updatePassword
+    updateUser,
+    updatePassword,
+    loadUserRoles
 };
 
 export default UserService;

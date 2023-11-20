@@ -19,9 +19,13 @@ function Login() {
             const response = await UserService.login(email, password);
 
             if (response.status === 200) {
+                console.log("dentro");
                 const token = response.data.accessToken;
                 localStorage.setItem("token", token);
 
+                const userRoles = await UserService.loadUserRoles(response.data.accessToken);
+                console.log(userRoles);
+                localStorage.setItem('roles', JSON.stringify(userRoles));
                 await asignCartToCurrentUser();
 
                 setMessage("Login successfully");
