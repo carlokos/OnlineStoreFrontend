@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import ProductTable from '../../components/Statistics/productsTable';
 import CategoriesChar from '../../components/Statistics/CategoriesChar';
 import UserTable from '../../components/Statistics/userTable';
+import Revenues from '../../components/Statistics/Revenues';
 import Paper from '@mui/material/Paper';
 
 const Statistics = () => {
@@ -42,6 +43,13 @@ const Statistics = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <UserTable />
+                        </Grid>
+                    </Grid>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <Revenues />
                         </Grid>
                     </Grid>
                 </TabPanel>
