@@ -12,7 +12,8 @@ const Revenues = () => {
   const [selectedMonth, setSelectedMonth] = useState(today.month() + 1);
   const [selectedYear, setSelectedYear] = useState(today.year());
   const [chartData, setChartData] = useState([]);
-  const [monthlyRevenue, setMontlyRevenue] = useState(0);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+  const weekLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
 
   const handleDateSelection = (date) => {
     const month = dayjs(date).month() + 1;
@@ -26,21 +27,20 @@ const Revenues = () => {
   };
 
   useEffect(() => {
-    setSelectedMonth(selectedDate.month() + 1);
-    setSelectedYear(selectedDate.year());
-  }, [selectedDate]);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await StatisticsService.getMonthlyRevenue(selectedMonth, selectedYear);
-        const response = await StatisticsService.getWeeklyRevenue(selectedMonth, selectedYear);
+        setChartData([]);
 
-        setMontlyRevenue(data.data);
-        if (Array.isArray(response.data)) {
-          setChartData(response.data);
-        } else if (response.data) {
-          setChartData([response.data]);
+        const [monthlyResponse, weeklyResponse] = await Promise.all([
+          StatisticsService.getMonthlyRevenue(selectedMonth, selectedYear),
+          StatisticsService.getWeeklyRevenue(selectedMonth, selectedYear),
+        ]);
+
+        setMonthlyRevenue(monthlyResponse.data);
+        if (Array.isArray(weeklyResponse.data)) {
+          setChartData(weeklyResponse.data);
+        } else if (weeklyResponse.data) {
+          setChartData([weeklyResponse.data]);
         } else {
           setChartData([]);
         }
@@ -48,10 +48,9 @@ const Revenues = () => {
         console.error('Error al llamar a la API:', error);
       }
     };
+
     fetchData();
   }, [selectedYear, selectedMonth]);
-
-
 
   return (
     <div>
@@ -74,7 +73,7 @@ const Revenues = () => {
           xAxis={[
             {
               id: 'barCategories',
-              data: chartData.map((entry) => `Week ${entry.week}`),
+              data: weekLabels,
               scaleType: 'band',
             },
           ]}
@@ -94,8 +93,3 @@ const Revenues = () => {
 };
 
 export default Revenues;
-
-
-
-
-

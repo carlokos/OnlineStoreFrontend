@@ -8,7 +8,7 @@ import UserService from '../../services/userService';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { getTotalQuantity} from '../cart/CartLogic';
+import { getTotalQuantity } from '../cart/CartLogic';
 import { addListener, quitListener } from '../cart/cartListener';
 import Cookies from "js-cookie";
 
@@ -34,7 +34,7 @@ export default function NavBar() {
     }
 
     const handleCartUpdate = (event) => {
-        const newQuantity = Number(event.detail);  
+        const newQuantity = Number(event.detail);
         if (!isNaN(newQuantity)) {
             setQuantity(newQuantity);
         }
@@ -67,7 +67,7 @@ export default function NavBar() {
 
     useEffect(() => {
         setQuantity(getTotalQuantity());
-    }, []); 
+    }, []);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -112,12 +112,19 @@ export default function NavBar() {
                         </Link>
                     </li>
                     {roles.includes(1) && (
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/orderManager">
-                            Orders manager
-                        </Link>
-                    </li>
-                )}
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/orderManager">
+                                Orders manager
+                            </Link>
+                        </li>
+                    )}
+                    {roles.includes(1) && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/statistics">
+                                Statistics
+                            </Link>
+                        </li>
+                    )}
                 </ul>
             </div>
 
