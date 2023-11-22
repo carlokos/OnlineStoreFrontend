@@ -14,12 +14,12 @@ const getTopCategories = () => {
     return axios.get(`${API_URL}orderDetail/top-categories`);
 }
 
-const getMonthlyRevenue = (month) => {
-    return axios.get(`${API_URL}order/montly-revenue/${month}`);
+const getMonthlyRevenue = (month, year) => {
+    return axios.get(`${API_URL}order/montly-revenue/${month}/${year}`);
 };
 
-const getWeeklyRevenue = (month, week) => {
-    return axios.get(`${API_URL}order/montly-revenue/${month}/${week}`);
+const getWeeklyRevenue = (month, year) => {
+    return axios.get(`${API_URL}order/weekly-revenue/${month}/${year}`);
 };
 
 const StatisticsService = {
