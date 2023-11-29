@@ -22,11 +22,11 @@ const UserDetails = () => {
     const [addressData, setAddressData] = useState({
         country: '',
         city: '',
-        postal_code: '',
+        postalCode: '',
         street: '',
         home: '',
         apartament: '',
-        user_id: ''
+        userId: ''
     });
 
     const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +44,7 @@ const UserDetails = () => {
                 setUserData(response.data);
                 setAddressData(prevAddressData => ({
                     ...prevAddressData,
-                    user_id: parseInt(response.data.id, 10),
+                    userId: parseInt(response.data.id, 10),
                 }));
             } catch (error) {
                 console.error('Error fetching user:', error);

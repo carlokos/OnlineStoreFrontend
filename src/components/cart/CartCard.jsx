@@ -26,7 +26,7 @@ const CartCard = ({ productId, id }) => {
 
     const getProductQuantity = () => {
         const cart = getCart();
-        const cartItem = cart.find(item => item.product_id === productId);
+        const cartItem = cart.find(item => item.productId === productId);
         return cartItem ? cartItem.quantity : 0;
     };
 

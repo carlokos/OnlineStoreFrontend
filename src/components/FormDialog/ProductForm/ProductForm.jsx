@@ -76,8 +76,8 @@ const ProductForm = ({ formData, handleInputChange, isValid }) => {
             <Select
                 labelId="category-label"
                 id="category-select"
-                value={formData.category_id || ''}
-                onChange={handleInputChange('category_id')}
+                value={formData.categoryId || ''}
+                onChange={handleInputChange('categoryId')}
                 fullWidth
             >
                 {categories.map(category => (

@@ -18,7 +18,7 @@ const getUserId = async () => {
 export const addToCart = async (product) => {
   const userId = await getUserId();
   let cart = Cookies.getJSON('cart') || [];
-  const existingItem = cart.find((item) => item.product_id === product.id);
+  const existingItem = cart.find((item) => item.productId === product.id);
 
   if (existingItem) {
     existingItem.quantity += 1;
@@ -27,7 +27,7 @@ export const addToCart = async (product) => {
       await CartService.addQuantityToCart(userId, product.id);
     }
   } else {
-    const newItem = { product_id: product.id, quantity: 1, user_id: userId };
+    const newItem = { productId: product.id, quantity: 1, userId: userId };
     cart.push(newItem);
     if (userId !== 0) {
       await CartService.addCart(newItem);
@@ -42,9 +42,9 @@ export const asignCartToCurrentUser = async () => {
   let cart = Cookies.getJSON('cart') || [];
   let newCart = [];
 
-  const productsWithUserIdZero = cart.filter(item => item.user_id === 0);
+  const productsWithUserIdZero = cart.filter(item => item.userId === 0);
   for (const item of productsWithUserIdZero) {
-    const updatedItem = { ...item, user_id: userId };
+    const updatedItem = { ...item, userId: userId };
     if (userId !== 0) {
       newCart.push(updatedItem);
       await CartService.addCart(updatedItem);
@@ -57,7 +57,7 @@ export const asignCartToCurrentUser = async () => {
 
 export const removeFromCart = async (productId, id) => {
   let cart = Cookies.getJSON('cart') || [];
-  const updatedCart = cart.filter((item) => item.product_id !== productId);
+  const updatedCart = cart.filter((item) => item.productId !== productId);
 
   await CartService.deleteCart(id);
 
@@ -70,7 +70,7 @@ export const removeFromCart = async (productId, id) => {
 export const increaseQuantity = async (productId) => {
   let cart = Cookies.getJSON('cart') || [];
   const updatedCart = await Promise.all(cart.map(async (item) => {
-    if (item.product_id === productId) {
+    if (item.productId === productId) {
       const updatedItem = { ...item, quantity: item.quantity + 1 };
       await CartService.updateCart(updatedItem);
       return updatedItem;
@@ -86,7 +86,7 @@ export const increaseQuantity = async (productId) => {
 export const decreaseQuantity = async (productId) => {
   let cart = Cookies.getJSON('cart') || [];
   const updatedCart = await Promise.all(cart.map(async (item) => {
-    if (item.product_id === productId) {
+    if (item.productId === productId) {
       const updatedItem = { ...item, quantity: Math.max(0, item.quantity - 1) };
       if (updatedItem.quantity === 0) {
         await CartService.deleteCart(item.id);
@@ -135,7 +135,7 @@ export const getTotalPrice = async () => {
   let totalPrice = 0;
 
   const pricePromises = cart.map(async (item) => {
-    const product = await ProductService.getProduct(item.product_id);
+    const product = await ProductService.getProduct(item.productId);
     const productPrice = product.data.price;
 
     return productPrice * item.quantity;

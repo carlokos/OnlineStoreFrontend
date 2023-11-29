@@ -23,8 +23,8 @@ const AddressForm = ({ formData, handleInputChange }) => {
             <TextField
                 label="PostalCode"
                 type="number"
-                value={formData.postal_code || ''}
-                onChange={handleInputChange('postal_code')}
+                value={formData.postalCode || ''}
+                onChange={handleInputChange('postalCode')}
                 fullWidth
                 margin="normal"
             />

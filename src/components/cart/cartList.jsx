@@ -13,7 +13,7 @@ const CartList = ({ cart }) => {
           {cart.map((item) => (
             <CartCard
               key={item.id}
-              productId={item.product_id}
+              productId={item.productId}
               id={item.id}
               quantity={item.quantity}
             />

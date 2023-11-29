@@ -19,9 +19,6 @@ const Revenues = () => {
     const month = dayjs(date).month() + 1;
     const year = dayjs(date).year();
 
-    console.log('Mes seleccionado:', month);
-    console.log('Año seleccionado:', year);
-
     setSelectedMonth(month);
     setSelectedYear(year);
   };

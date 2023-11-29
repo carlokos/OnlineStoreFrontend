@@ -34,7 +34,7 @@ const getTotalPrice = (id) => {
 const addOrderDetail = async (orderId, cart) => {
     const orderDetailsData = cart.map((cartItem) => ({
         orderId: orderId,
-        productId: cartItem.product_id,
+        productId: cartItem.productId,
         quantity: cartItem.quantity,
     }));
 
