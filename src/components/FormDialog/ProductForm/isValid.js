@@ -1,7 +1,7 @@
 const isValid = (formData) => {
-    const { category_id, title, price, weight, stock, color, volume, brand } = formData;
+    const { categoryId, title, price, weight, stock, color, volume, brand } = formData;
     return (
-        category_id && title && price && weight && stock && color && volume && brand
+        categoryId && title && price && weight && stock && color && volume && brand
     );
 };
 

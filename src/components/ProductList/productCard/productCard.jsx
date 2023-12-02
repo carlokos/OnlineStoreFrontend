@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import ProductDialog from "../../FormDialog/ProductDialog";
+import ProductService from "../../../services/productService";
 import { Link } from "react-router-dom";
 import { addToCart } from "../../cart/CartLogic";
 
@@ -23,6 +24,7 @@ const StyledCard = styled(Card)({
 function ProductCard(product) {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [roles, setRoles] = useState([]);
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         const getRoles = () => {
@@ -31,8 +33,22 @@ function ProductCard(product) {
                 setRoles(localStorage.getItem('roles'));
             }
         }
+        
         getRoles();
     }, [])
+
+    useEffect(() => {
+        const getImage = async () => {
+            try {
+                const response = await ProductService.getFirstProductImage(product.id);
+                setImage(response);
+            } catch (error) {
+                console.error("Error fetching product image:", error);
+            }
+        }
+    
+        getImage();
+    }, [product.id]);
 
     const handleDeleteClick = (event) => {
         event.preventDefault();
@@ -49,7 +65,23 @@ function ProductCard(product) {
 
     return (
         <StyledCard>
-            <Image className="card-img-top" src="https://picsum.photos/300/200" alt="Card image cap" thumbnail />
+            {image ? (
+                <Image 
+                    className="card-img-top" 
+                    src={`data:image/${image.format};base64,${image}`} 
+                    alt="Product Image" 
+                    thumbnail 
+                    style={{ width: '100%', height: '70%' }}
+                />
+            ) : (
+                <Image 
+                    className="card-img-top" 
+                    src="https://picsum.photos/300/200" 
+                    alt="Placeholder Image" 
+                    thumbnail 
+                    style={{ width: '100%', height: '70%' }}
+                />
+            )}
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                     {product.title}

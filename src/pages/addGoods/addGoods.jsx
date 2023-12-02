@@ -17,6 +17,7 @@ const AddGoods = () => {
 
     const [productFormData, setproductFormData] = useState({});
     const [isProductFormValid, setIsProductFormValid] = useState(false);
+    const [image, setImage] = useState(null);
 
     const [categoryFormData, setCategoryFormData] = useState({});
     const [isCategoryFormValid, setIsCategoryFormValid] = useState(false);
@@ -38,10 +39,16 @@ const AddGoods = () => {
     const handleProductInputChange = (fieldName) => (event) => {
         const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
 
-        setproductFormData({
-            ...productFormData,
-            [fieldName]: value,
-        });
+        if (fieldName === 'image') {
+            const file = event.target.files[0];
+            console.log(file);
+            setImage(file);
+        } else {
+            setproductFormData({
+                ...productFormData,
+                [fieldName]: value,
+            });
+        } 
     };
 
     const handleCategoryInputChange = (fieldName) => (event) => {

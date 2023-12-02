@@ -62,7 +62,6 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
 
   const handleEditClick = (categoryId) => {
     setEditCategoryId(categoryId);
-    console.log(editCategoryId);
     openCategoryDialog();
   };
 

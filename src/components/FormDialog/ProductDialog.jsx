@@ -3,12 +3,13 @@ import ProductService from "../../services/productService";
 import ProductForm from "./ProductForm/ProductForm";
 import isValid from "./ProductForm/isValid";
 import FormDialog from "./FormDialog";
+import ImageService from "../../services/ImageService";
 
 const UpdateProductDialog = ({ open, onClose, id }) => {
     const [product, setProduct] = useState({});
     const [formData, setFormData] = useState({});
-    
     const [isFormValid, setIsFormValid] = useState(false);
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         const loadProduct = async () => {
@@ -34,15 +35,23 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
     const handleInputChange = (fieldName) => (event) => {
         const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
 
-        setFormData({
-            ...formData,
-            [fieldName]: value,
-        });
+        if (fieldName === 'image') {
+            const file = event.target.files[0];
+            setImage(file);
+        } else {
+            setFormData({
+                ...formData,
+                [fieldName]: value,
+            });
+        }
     };
 
     const updateProduct = async () => {
         try {
             if (isFormValid) {
+                if(image){
+                    await ImageService.uploadImage(image, id);
+                }
                 await ProductService.updateProduct(formData);
                 onClose();
                 window.location.reload();
@@ -63,7 +72,7 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
             console.error('Error deleting product:', error);
         }
     };
-
+    
     return (
         <div>
             <FormDialog
@@ -72,11 +81,11 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
                 dataForm={{
                     component: ProductForm,
                     formData: formData,
-                    handleInputChange: handleInputChange,
+                    handleInputChange: handleInputChange, 
                     isValid: isFormValid,
                 }}
                 updateItem={updateProduct}
-                deleteItem={deleteProduct}
+                deleteItem={deleteProduct}         
             />
         </div>
     );

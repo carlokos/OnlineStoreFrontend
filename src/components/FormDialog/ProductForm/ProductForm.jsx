@@ -7,7 +7,7 @@ import CategoryService from "../../../services/categoryService";
 
 const ProductForm = ({ formData, handleInputChange, isValid }) => {
     const [categories, setCategories] = useState([]);
-
+    
     useEffect(() => {
         CategoryService.getCategories()
             .then(response => {
@@ -86,6 +86,12 @@ const ProductForm = ({ formData, handleInputChange, isValid }) => {
                     </MenuItem>
                 ))}
             </Select>
+
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleInputChange('image')}
+            />           
         </div>
     );
 }

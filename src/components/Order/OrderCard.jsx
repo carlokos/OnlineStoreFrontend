@@ -7,7 +7,6 @@ import OrderDetailsListDialog from './orderDetailsList/OrderDetailsListDialog';
 
 const OrderCard = ({ order, admin }) => {
     const [count, setCount] = useState([]);
-    const [price, setPrice] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
@@ -17,19 +16,6 @@ const OrderCard = ({ order, admin }) => {
                 setCount(response.data);
             } catch (error) {
                 console.error("Error fetching user orders:", error);
-            }
-        };
-
-        fetchCount();
-    }, []);
-
-    useEffect(() => {
-        const fetchCount = async () => {
-            try {
-                const response = await OrderDetailsService.getTotalOrderPrice(order.id);
-                setPrice(response.data);
-            } catch (error) {
-                console.error("Error fetching user order price:", error);
             }
         };
 
@@ -58,7 +44,7 @@ const OrderCard = ({ order, admin }) => {
                     </div>
                     <div>
                         <Typography variant="body2" color="textSecondary" component="span">
-                            Price: ${price}
+                            Price: ${order.totalPrice}
                         </Typography>
                     </div>
                 </CardContent>
