@@ -11,6 +11,8 @@ import UserDetails from './pages/userDetails/userDetails'
 import CartPage from './pages/cartPage/CartPage'
 import OrderManager from './pages/OrderManager/OrderManager'
 import Statistics from './pages/StatisticsPage/Statistics'
+import NotFound from './pages/NotFound/NotFound'
+import ProtectedRoute from './ProtectedRoute'
 
 function App() {
   return (
@@ -22,11 +24,18 @@ function App() {
             <Route exact path='/productview/:id' element={<ProductView />} />
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/signup' element={<SignUp />} />
-            <Route exact path='/addGoods' element={<AddGoods />} />
-            <Route exact path='/profile' element={<UserDetails />} />
-            <Route exacth path='/cart' element={<CartPage />} />
-            <Route exact path='/orderManager' element={<OrderManager/>}/>
-            <Route exact path='/statistics' element={<Statistics/>}/>
+            <Route path='*' element={<NotFound />} />
+
+            <Route element={<ProtectedRoute needAdmin={true}/>}>
+              <Route exact path='/addGoods' element={<AddGoods />} />
+              <Route exact path='/orderManager' element={<OrderManager/>}/>
+              <Route exact path='/statistics' element={<Statistics/>}/>
+            </Route>
+
+            <Route element={<ProtectedRoute needAdmin={false}/>}>
+              <Route exact path='/profile' element={<UserDetails />} />
+              <Route exacth path='/cart' element={<CartPage />} />
+            </Route> 
           </Routes>
       </Router>
     </>
