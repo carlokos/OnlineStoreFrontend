@@ -23,7 +23,6 @@ export const addToCart = async (product) => {
   if (existingItem) {
     existingItem.quantity += 1;
     if(userId !== 0){
-      console.log("product ID: ", product.id);
       await CartService.addQuantityToCart(userId, product.id);
     }
   } else {

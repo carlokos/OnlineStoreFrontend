@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-
 
 const ProtectedRoute = ({
     activate,
@@ -10,9 +9,7 @@ const ProtectedRoute = ({
 
     const accessToken = localStorage.getItem('token');
     const roles =  localStorage.getItem('roles');
-
-    console.log(accessToken);
-    
+  
     if (!accessToken) {
         return <Navigate to={redirectPath} replace />
     }

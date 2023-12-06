@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { getTotalQuantity } from '../cart/CartLogic';
 import { addListener, quitListener } from '../cart/cartListener';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Cookies from "js-cookie";
 
 export default function NavBar() {
@@ -79,26 +80,41 @@ export default function NavBar() {
                     className="d-inline-block align-top"
                     alt=""
                 />
-                Bootstrap
             </Link>
 
-            <button
-                className="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span className="navbar-toggler-icon"></span>
-            </button>
+            <Dropdown>
+                <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                    <span className="navbar-toggler-icon"></span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Link className="dropdown-item" to="/">
+                        Home
+                    </Link>
+                    <Link className="dropdown-item" to="/">
+                        Products
+                    </Link>
+                    <Link className="dropdown-item" to="/">
+                        Top selling
+                    </Link>
+                    {roles.includes(1) && (
+                        <Link className="dropdown-item" to="/orderManager">
+                            Order manager
+                        </Link>
+                    )}
+                    {roles.includes(1) && (
+                        <Link className="dropdown-item" to="/statistics">
+                            Statistics
+                        </Link>
+                    )}
+                </Dropdown.Menu>
+            </Dropdown>
 
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
                         <Link className="nav-link" to="/">
-                            Home <span className="sr-only">(current)</span>
+                            Home <span className="sr-only">(actual)</span>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -114,7 +130,7 @@ export default function NavBar() {
                     {roles.includes(1) && (
                         <li className="nav-item">
                             <Link className="nav-link" to="/orderManager">
-                                Orders manager
+                                Order manager
                             </Link>
                         </li>
                     )}
@@ -129,11 +145,11 @@ export default function NavBar() {
             </div>
 
             {/**
-             * It changes depending if user have identify or not
+             * Changes depending if user is authentificated or not
              */}
             <div className="d-flex">
                 {user ? (
-                    <div>
+                    <div className="user-dropdown">
                         <Button
                             onClick={handleMenuClick}
                             className="white-text-button"
@@ -146,7 +162,7 @@ export default function NavBar() {
                             onClose={handleMenuClose}
                         >
                             <Link to={"/profile"}><MenuItem>View profile</MenuItem></Link>
-                            <MenuItem onClick={handleLogOut}>log out</MenuItem>
+                            <MenuItem onClick={handleLogOut}>Log out</MenuItem>
                         </Menu>
                     </div>
                 ) : (

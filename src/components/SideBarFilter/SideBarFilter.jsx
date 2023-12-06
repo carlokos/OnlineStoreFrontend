@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+
 import CategoryDialog from '../FormDialog/CategoryDialog';
 
 export default function Sidebar({ onCategoryChange, onSearch }) {
@@ -19,6 +20,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCategoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [roles, setRoles] = useState([]);
 
@@ -70,52 +72,54 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
   }
 
   return (
-    <div className='filter'>
-      <TextField
-        label="Search by name"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={handleSearchChange}
-        margin="normal"
-        InputProps={{
-          endAdornment: (
-            <SearchIcon color="action" />
-          ),
-        }}
-      />
-      <List className='input-group'>
-        <Typography variant="h6" gutterBottom>Category</Typography>
-        {categories.map((category) => (
-          <ListItem key={category.id}>
-            <Checkbox
-              checked={selectedCategory === category.id}
-              onChange={() => handleCheckboxChange(category.id)}
-            />
-            <ListItemText primary={category.name} />
-            { roles.includes(1) && (
-            <IconButton
-              edge="end"
-              aria-label="edit"
-              size='small'
-              onClick={() => handleEditClick(category.id)}
-            >
-              <EditIcon />
-            </IconButton>
-            )}
-          </ListItem>
-        ))}
-      </List>
+    <div className={`filter ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+      {isSidebarOpen && (
+        <div>
+          <TextField
+            label="Search by name"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={handleSearchChange}
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <SearchIcon color="action" />
+              ),
+            }}
+          />
+          <List className='input-group'>
+            <Typography variant="h6" gutterBottom>Category</Typography>
+            {categories.map((category) => (
+              <ListItem key={category.id}>
+                <Checkbox
+                  checked={selectedCategory === category.id}
+                  onChange={() => handleCheckboxChange(category.id)}
+                />
+                <ListItemText primary={category.name} />
+                {roles.includes(1) && (
+                  <IconButton
+                    edge="end"
+                    aria-label="edit"
+                    size='small'
+                    onClick={() => handleEditClick(category.id)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                )}
+              </ListItem>
+            ))}
+          </List>
 
-      <Divider variant="fullWidth" />
+          <Divider variant="fullWidth" />
 
-      <CategoryDialog
-        open={isCategoryDialogOpen}
-        onClose={() => setCategoryDialogOpen(false)}
-        id={editCategoryId}
-      />
+          <CategoryDialog
+            open={isCategoryDialogOpen}
+            onClose={() => setCategoryDialogOpen(false)}
+            id={editCategoryId}
+          />
+        </div>
+      )}
     </div>
   );
 };
-
-

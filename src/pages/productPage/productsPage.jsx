@@ -6,6 +6,11 @@ import ProductList from '../../components/ProductList/productList';
 import AddIcon from '@mui/icons-material/Add'
 import Fab from '@mui/material/Fab';
 import { Link } from 'react-router-dom';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import IconButton from '@mui/material/IconButton';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 function ProductPage() {
   /**
@@ -16,8 +21,10 @@ function ProductPage() {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [roles, setRoles] = useState([]);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
     const getRoles = () => {
@@ -28,6 +35,20 @@ function ProductPage() {
     }
     getRoles();
   }, [])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 600); // Ajusta el valor según tus necesidades
+    };
+
+    handleResize(); // Verifica el tamaño de la pantalla al cargar la página
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     fetchProducts();
@@ -47,6 +68,10 @@ function ProductPage() {
       console.error('Error filtering products by category:', error);
     }
   };
+
+  const hideSideFilter = (event) => {
+    setIsSidebarOpen(!isSidebarOpen)
+  }
 
   const fetchProducts = async () => {
     try {
@@ -74,11 +99,22 @@ function ProductPage() {
   };
 
   return (
-    <div className='product-container'>
+    <div className={`product-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       <div className='product_panelList-wrap'>
-        <div className='product_panel-wrap'>
+        <div className={`product_panel-wrap ${isSidebarOpen ? 'panel-open' : 'panel-closed'}`}>
           <Sidebar onCategoryChange={handleCategoryChange} onSearch={handleSearch} />
         </div>
+        {isSmallScreen && (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={() => hideSideFilter()}
+            className={`${isSidebarOpen ? 'toggle-button' : 'hideButton'}`}
+          >
+            {isSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        )}
         <div className='product_list-wrap'>
           <ProductList products={products} />
         </div>

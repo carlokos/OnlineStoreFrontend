@@ -12,3 +12,13 @@
     padding: 0.3rem;
     font-size: 0.8rem;
 }
+
+@media (min-width: 992px) {
+    .navbar .dropdown {
+      display: none;
+    }
+  
+    .navbar .navbar-collapse {
+      display: block;
+    }
+  }

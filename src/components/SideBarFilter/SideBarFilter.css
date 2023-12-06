@@ -16,3 +16,17 @@
   margin-top: 16px;
   justify-content: center;
 }
+
+.filter {
+  transition: margin-left 0.3s;
+}
+
+.sidebar-open {
+  margin-left: 0;
+}
+
+.sidebar-closed {
+  margin-left: -250px; /* Ajusta el ancho de la barra lateral según tus necesidades */
+}
+
+
