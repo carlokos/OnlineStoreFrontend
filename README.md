@@ -1,6 +1,5 @@
-# Online Store Backend
-Project created at JavaSchool 2023, this repository saves my API for my onlineStore. It's a fully functional API using Spring, it is docker-file and it includes tests to check the code
-
+# Online Store Fronted
+Project created at JavaSchool 2023, this repository saves the web app from my final project, which is OnlineStore. I use React for web development and mostly MaterialUI for the interface to make it responsive. 
 
 # How to deploy
 Before deploying, ensure you've downloaded both this repository and the **frontend** repository: [OnlineStoreFrontend](https://github.com/carlokos/OnlineStoreFrontend.git). 
@@ -28,10 +27,12 @@ Hope you enjoy navigating through my OnlineStore!
 
 # Characteristics
 - User-friendly interfaces easy to use
-- Real time updates with cart, orders and products stock
-- Secure login and sign up with scripting password
+- Real time updates with cart and orders
+- Persistent cart even closing the web
+- User can sign in, log in and change its information
 - Admin privileges 
+- Stastistics to compare sales
 - All in a docker container to easy use
-- Tests codes for controllers and services
+
 
 
