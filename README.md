@@ -28,7 +28,7 @@ Hope you enjoy navigating through my OnlineStore!
 
 # Characteristics
 - User-friendly interfaces easy to use
-- Real time updates with cart and orders
+- Real time updates with cart, orders and products stock
 - Secure login and sign up with scripting password
 - Admin privileges 
 - All in a docker container to easy use
