@@ -32,5 +32,6 @@ Hope you enjoy navigating through my OnlineStore!
 - Secure login and sign up with scripting password
 - Admin privileges 
 - All in a docker container to easy use
+- Tests codes for controllers and services
 
 
