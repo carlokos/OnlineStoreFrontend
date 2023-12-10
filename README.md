@@ -5,14 +5,15 @@ Project created at JavaSchool 2023, this repository saves my API for my onlineSt
 # How to deploy
 Before deploying, ensure you've downloaded both this repository and the **frontend** repository: [OnlineStoreFrontend](https://github.com/carlokos/OnlineStoreFrontend.git). 
 
-Once you have both repositories on your machine, organize the directories correctly according to the `docker-compose.yml`. Please check the provided `docker-compose.yml` for guidance.
-
-- Backend from repository
+Once you have both repositories on your machine, organize the directories correctly according to the `docker-compose.yml`. Please check the provided `docker-compose.yml` for guidance
+```
+- Backend
 -- Backend-files
-- Any folder name
--- Frontend from repository
+- Any name
+-- Frontend
 ---- Frontend-files
-  
+```
+
 # How to use it
 
 After setting up, run the following command: `docker-compose up`. No need to build any app since both repositories come with their respective builds. 
@@ -24,4 +25,12 @@ Access the web app at [localhost:5173](http://localhost:5173) and start explorin
 - Password: root 
 
 Hope you enjoy navigating through my OnlineStore!
+
+# Characteristics
+- User-friendly interfaces easy to use
+- Real time updates with cart and orders
+- Secure login and sign up with scripting password
+- Admin privileges 
+- All in a docker container to easy use
+
 
