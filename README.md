@@ -23,6 +23,7 @@ Access the web app at [localhost:5173](http://localhost:5173) and start explorin
 - Email: admin@admin.com 
 - Password: root 
 
+The docker container is call `onlinestore`
 Hope you enjoy navigating through my OnlineStore!
 
 # Characteristics
