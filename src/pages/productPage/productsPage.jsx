@@ -123,7 +123,7 @@ function ProductPage() {
       {roles.includes(1) && (
         <Link to={"/addGoods"}>
           <Fab
-            color="primary"
+            color="secondary"
             aria-label="add"
             style={{ position: 'fixed', bottom: 10, right: 25 }}
           >

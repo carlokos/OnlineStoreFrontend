@@ -1,9 +1,11 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { TextField, Checkbox, Button } from "@mui/material";
 import UserService from "../../services/userService";
 import AlertMessageComponent from "../../components/AlertMessageComponent/AlertMessageComponent";
 import { useNavigate } from 'react-router-dom';
 import { asignCartToCurrentUser } from "../../components/cart/CartLogic";
+import LoginIcon from '@mui/icons-material/Login';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ function Login() {
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('Default message');
     const [severity, setSeverity] = useState('info');
+    const [emailError, setEmailError] = useState(false);
 
     const navigate = useNavigate();
 
@@ -19,7 +22,6 @@ function Login() {
             const response = await UserService.login(email, password);
 
             if (response.status === 200) {
-                console.log("dentro");
                 const token = response.data.accessToken;
                 localStorage.setItem("token", token);
 
@@ -36,21 +38,37 @@ function Login() {
                 window.location.reload();
             }
         } catch (error) {
-            console.error('Error during login:', error);
-
             setMessage("Email or password incorrect");
             setSeverity("error");
             setShowAlert(true);
         }
     };
 
+    const validateEmail = (value) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+    };
+
+    const handleEmailChange = (e) => {
+        const inputValue = e.target.value;
+        setEmail(inputValue);
+        setEmailError(!validateEmail(inputValue));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleLogin();
-    }
+
+        if (validateEmail(email)) {
+            await handleLogin();
+        } else {
+            setMessage("Invalid email format");
+            setSeverity("error");
+            setShowAlert(true);
+        }
+    };
 
     return (
-        <div className="login template d-flex justify-content-center align-items-center vw-100 vh-100 bg-primary">
+        <div className="login template d-flex justify-content-center align-items-center vw-100 vh-100">
             <div>
                 <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)} />
             </div>
@@ -59,32 +77,39 @@ function Login() {
                 <form>
                     <h3 className="text-center">Sign In</h3>
                     <div className="mb-2">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" placeholder="Enter email" className="form-control" value={email}
-                            onChange={(e) => setEmail(e.target.value)}></input>
+                        <TextField
+                            type="email"
+                            label="Email"
+                            variant="outlined"
+                            fullWidth
+                            value={email}
+                            onChange={handleEmailChange}
+                            error={emailError}
+                            helperText={emailError ? "Invalid email format" : ""}
+                        />
                     </div>
                     <div className="mb-2">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" placeholder="Enter password" className="form-control" value={password}
-                            onChange={(e) => setPassword(e.target.value)}></input>
-                    </div>
-                    <div className="mb-2">
-                        <input type="checkbox" className="custom-control custom-checkbox" id="check" />
-                        <label htmlFor="check" className="custom-input-label ms-2">
-                            Remember me
-                        </label>
+                        <TextField
+                            type="password"
+                            label="Password"
+                            variant="outlined"
+                            fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
                     <div className="d-grid">
-                        <button className="btn btn-primary" onClick={handleSubmit}>Sign in</button>
+                        <Button variant="contained" color="primary" onClick={handleSubmit}>
+                            Sign in<LoginIcon/>
+                        </Button>
                     </div>
                     <p className="text-end mt-2">
-                        Forgot <Link className="update-pw link-dark" to={"/"} >Password</Link> <Link className="ms-2 link-dark" to={"/signup"}>Sign-up</Link>
+                        Need to register? <Link className="ms-2 link-dark" to={"/signup"}>Sign-up</Link>
                     </p>
                 </form>
             </div>
         </div>
-
-    )
+    );
 }
 
 export default Login;

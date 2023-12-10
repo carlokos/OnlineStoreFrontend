@@ -97,7 +97,7 @@ export default function Sidebar({ onCategoryChange, onSearch }) {
                   onChange={() => handleCheckboxChange(category.id)}
                 />
                 <ListItemText primary={category.name} />
-                {roles.includes(1) && (
+                {roles.includes('1') && category.id !== 1 && (
                   <IconButton
                     edge="end"
                     aria-label="edit"

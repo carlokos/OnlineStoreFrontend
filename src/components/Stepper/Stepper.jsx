@@ -20,8 +20,8 @@ import { clearUserCart, getCart } from '../cart/CartLogic';
 function DialogStepper({ open, onClose, user_id }) {
   const [activeStep, setActiveStep] = useState(0);
   const [order, setOrder] = useState({
-    paymentStatus: 'paid',
-    orderStatus: 'delivered',
+    paymentStatus: '',
+    orderStatus: '',
     totalPrice: null,
     orderDate: new Date().toISOString(),
     userId: user_id,
@@ -35,6 +35,8 @@ function DialogStepper({ open, onClose, user_id }) {
       ...prevOrder,
       paymentId: paymentMethod,
       deliveryMethodId: deliveryMethod,
+      paymentStatus: paymentMethod === 2 ? 'paid' : 'pending',
+      orderStatus: paymentMethod === 2 ? 'pending shipment' : 'pending payment',
     }));
   };
 
@@ -103,13 +105,13 @@ function DialogStepper({ open, onClose, user_id }) {
               })}
 
               <div style={{ marginTop: '20px' }}>
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Atrás
+                <Button disabled={activeStep === 0} onClick={handleBack} color='success'>
+                  Back
                 </Button>
                 <Button
                   disabled={activeStep === 0}
                   variant="contained"
-                  color="primary"
+                  color="success"
                   onClick={handleNext}
                 >
                   {activeStep === steps.length - 1 ? 'Checkout' : 'Next'}

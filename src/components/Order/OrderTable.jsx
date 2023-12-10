@@ -14,6 +14,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import TablePagination from '@mui/material/TablePagination';
 import UpdateOrderStatus from './UpdateOrderStatus';
 import OrderService from '../../services/OrderService';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import OrderDetailsListDialog from './orderDetailsList/OrderDetailsListDialog';
 
 const OrderTable = ({ orders }) => {
   const [filtroStatus, setFiltroStatus] = useState('all');
@@ -22,8 +24,11 @@ const OrderTable = ({ orders }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [updateDetailsOpen, setUpdateDetailsOpen] = useState(false);
   const [orderAnchorEl, setOrderAnchorEl] = useState(null);
   const [paymentAnchorEl, setPaymentAnchorEl] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState(false);
+
 
   const handleChangePage = (_, newPage) => {
     setPage(newPage);
@@ -37,7 +42,6 @@ const OrderTable = ({ orders }) => {
   const handleRowClick = (order) => {
     setSelectedOrder(order);
     setUpdateDialogOpen(true);
-    console.log(`Clicked on order with ID ${order.id}`);
   };
 
   const handleCloseUpdateDialog = () => {
@@ -60,6 +64,13 @@ const OrderTable = ({ orders }) => {
     anchorSetter(null);
   };
 
+  const viewDetails = (order) => {
+    setSelectedOrder(order);
+    setUpdateDialogOpen(false);
+    setUpdateDetailsOpen(true);
+    setForceUpdate((prev) => !prev);
+  }
+
   const ordersFiltrados =
     filtroStatus === 'all'
       ? orders
@@ -75,7 +86,7 @@ const OrderTable = ({ orders }) => {
       <Box id="orderTable">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="caption table">
-            <caption>Lista de Pedidos</caption>
+            <caption>Order list</caption>
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID Order</TableCell>
@@ -113,16 +124,22 @@ const OrderTable = ({ orders }) => {
                     ))}
                   </Menu>
                 </TableCell>
+                <TableCell align="center">View Details</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {paymentFiltrados
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((order) => (
-                  <TableRow key={order.id} onClick={() => handleRowClick(order)} style={{ cursor: 'pointer' }}>
-                    <TableCell align="center">{order.id}</TableCell>
-                    <TableCell align="center">{order.orderStatus}</TableCell>
-                    <TableCell align="center">{order.paymentStatus}</TableCell>
+                  <TableRow key={order.id} style={{ cursor: 'pointer' }}>
+                    <TableCell align="center" onClick={() => handleRowClick(order)}>{order.id}</TableCell>
+                    <TableCell align="center" onClick={() => handleRowClick(order)}>{order.orderStatus}</TableCell>
+                    <TableCell align="center" onClick={() => handleRowClick(order)}>{order.paymentStatus}</TableCell>
+                    <TableCell align="center">
+                      <IconButton onClick={() => viewDetails(order)}>
+                        <VisibilityIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -145,6 +162,15 @@ const OrderTable = ({ orders }) => {
           onClose={handleCloseUpdateDialog}
           order={selectedOrder}
           onUpdateOrder={handleUpdateOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <OrderDetailsListDialog
+          key={forceUpdate}
+          order={selectedOrder}
+          IsOpen={updateDetailsOpen}
+          onClose={() => setUpdateDetailsOpen(false)}
         />
       )}
     </>

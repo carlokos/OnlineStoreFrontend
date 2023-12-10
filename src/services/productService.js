@@ -23,6 +23,10 @@ const getProductsByCategory = (id) => {
     return axios.get(`${API_URL}products/category/${id}`);
 }
 
+const getTop10Products = () => {
+    return axios.get(`${API_URL}products/topTen`);
+}
+
 const deleteProduct = (id) => {
     return axios.delete(`${API_URL}products/${id}`);
 }
@@ -44,7 +48,8 @@ const ProductService = {
     getFirstProductImage,
     deleteProduct,
     updateProduct,
-    addProduct
+    addProduct,
+    getTop10Products
 };
 
 export default ProductService;

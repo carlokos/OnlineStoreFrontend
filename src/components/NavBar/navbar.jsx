@@ -12,6 +12,11 @@ import { getTotalQuantity } from '../cart/CartLogic';
 import { addListener, quitListener } from '../cart/cartListener';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Cookies from "js-cookie";
+import StarIcon from '@mui/icons-material/Star';
+import HomeIcon from '@mui/icons-material/Home';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export default function NavBar() {
     const [user, setUser] = useState(null);
@@ -51,7 +56,7 @@ export default function NavBar() {
                     setRoles(localStorage.getItem('roles'));
                     setUser(response.data);
                 } catch (error) {
-                    console.error('Error fetching user: ', error);
+                    console.log("no user authentificated");
                 }
             }
         };
@@ -74,11 +79,11 @@ export default function NavBar() {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <Link className="navbar-brand" to="/">
                 <img
-                    src="/docs/4.0/assets/brand/bootstrap-solid.svg"
+                    src="src\imgs\icono.png"
                     width="30"
                     height="30"
                     className="d-inline-block align-top"
-                    alt=""
+                    alt="logo"
                 />
             </Link>
 
@@ -91,10 +96,10 @@ export default function NavBar() {
                     <Link className="dropdown-item" to="/">
                         Home
                     </Link>
-                    <Link className="dropdown-item" to="/">
+                    <Link className="dropdown-item" to="/productList">
                         Products
                     </Link>
-                    <Link className="dropdown-item" to="/">
+                    <Link className="dropdown-item" to="/topProducts">
                         Top selling
                     </Link>
                     {roles.includes(1) && (
@@ -114,30 +119,30 @@ export default function NavBar() {
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
                         <Link className="nav-link" to="/">
-                            Home <span className="sr-only">(actual)</span>
+                            <HomeIcon/>Home<span className="sr-only">(actual)</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/">
-                            Products
+                        <Link className="nav-link" to="/productList">
+                            <LocalMallIcon/>Products 
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/">
-                            Top selling
+                        <Link className="nav-link" to="/topProducts">
+                            <StarIcon/>Top selling 
                         </Link>
                     </li>
                     {roles.includes(1) && (
                         <li className="nav-item">
                             <Link className="nav-link" to="/orderManager">
-                                Order manager
+                                <AdminPanelSettingsIcon/>Order manager 
                             </Link>
                         </li>
                     )}
                     {roles.includes(1) && (
                         <li className="nav-item">
                             <Link className="nav-link" to="/statistics">
-                                Statistics
+                                <BarChartIcon/>Statistics 
                             </Link>
                         </li>
                     )}

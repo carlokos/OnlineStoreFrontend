@@ -5,6 +5,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import StatisticsService from '../../services/StatisticsService';
 import { BarChart } from '@mui/x-charts/BarChart';
+import Typography from '@mui/material/Typography';
 
 const Revenues = () => {
   const today = dayjs();
@@ -50,7 +51,7 @@ const Revenues = () => {
   }, [selectedYear, selectedMonth]);
 
   return (
-    <div>
+    <div className='d-flex justify-content-center align-items-center'>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Seleccione una fecha"
@@ -61,29 +62,32 @@ const Revenues = () => {
         />
       </LocalizationProvider>
 
-      <div>
-        <p>Total month revenue: {`$${monthlyRevenue}`}</p>
-      </div>
+
 
       {Array.isArray(chartData) && chartData.length > 0 ? (
-        <BarChart
-          xAxis={[
-            {
-              id: 'barCategories',
-              data: weekLabels,
-              scaleType: 'band',
-            },
-          ]}
-          series={[
-            {
-              data: chartData.map((entry) => entry.weeklyRevenue),
-            },
-          ]}
-          width={500}
-          height={300}
-        />
+        <div>
+          <Typography variant="h5">Total month revenue: {`$${monthlyRevenue}`}</Typography>
+
+          <BarChart
+            xAxis={[
+              {
+                id: 'barCategories',
+                data: weekLabels,
+                scaleType: 'band',
+              },
+            ]}
+            series={[
+              {
+                data: chartData.map((entry) => entry.weeklyRevenue),
+              },
+            ]}
+            width={500}
+            height={300}
+
+          />
+        </div>
       ) : (
-        <p>No data found.</p>
+        <Typography variant="body1">No data found.</Typography>
       )}
     </div>
   );

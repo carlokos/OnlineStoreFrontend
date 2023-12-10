@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserService from '../../services/userService';
 import { Tab, Tabs, Box, Typography, Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -10,10 +10,16 @@ import AddressList from '../../components/AddressList/AddressList';
 import AddressForm from '../../components/FormDialog/AdressForm/AddressForm';
 import AddressService from '../../services/adresssService';
 import OrderList from '../../components/Order/OrderList';
+import AlertMessageComponent from '../../components/AlertMessageComponent/AlertMessageComponent';
+import addressValidation from '../../components/FormDialog/AdressForm/addressValidation';
+import validPassword from '../../components/FormDialog/userForm/validPassword';
 
 const UserDetails = () => {
     const [tabValue, setTabValue] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
+
+    const [isAddressValid, setIsAddressValid] = useState(false);
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
 
     const [user, setUser] = useState();
     const [userData, setUserData] = useState();
@@ -28,6 +34,26 @@ const UserDetails = () => {
         apartament: '',
         userId: ''
     });
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('Default message');
+    const [severity, setSeverity] = useState('info');
+
+    const makeAlert = (msg, severity) => {
+        setMessage(msg);
+        setSeverity(severity);
+        setShowAlert(true);
+    }
+
+    useEffect(() => {
+        const check = addressValidation(addressData);
+        setIsAddressValid(check);
+    }, [addressData]);
+
+    useEffect(() => {
+        const check = validPassword(passwordData);
+        setIsPasswordValid(check);
+    }, [passwordData])
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -67,16 +93,21 @@ const UserDetails = () => {
             await UserService.updateUser(userData);
             setUser(userData);
             setIsEditing(false);
-            console.log("User update");
+            makeAlert("Profile updated succesfully", "success");
         } catch (error) {
-            console.error("error updating user: " + error);
+            makeAlert(error.response.data, "error");
         }
     }
 
     const updatePassword = async() =>{
         try{
-            await UserService.updatePassword(user.id, passwordData);
-            setIsOpen(false);
+            if(isPasswordValid){
+                await UserService.updatePassword(user.id, passwordData);
+                setIsOpen(false);
+                makeAlert("Password changed succesfully", "success");
+            } else{
+                makeAlert("Please fill out the field to change your password", "error");
+            }
         } catch (error) {
             console.error("Error changin password: ", error);
         }
@@ -84,10 +115,14 @@ const UserDetails = () => {
 
     const createAddress = async() => {
         try{
-            await AddressService.addAddress(addressData);
-            window.location.reload();
+            if(isAddressValid){
+                await AddressService.addAddress(addressData);
+                window.location.reload();
+            } else{
+                makeAlert("Please fill out all fields to create an address", "error");
+            }
         } catch (error){
-            console.error("Error adding address: ", error);
+            makeAlert("Unexpected error creating address, please try again later");
         }
     }
 
@@ -136,6 +171,7 @@ const UserDetails = () => {
 
     return (
         <div className="container-fluid d-flex justify-content-center align-items-center vw-100 vh-100">
+            <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
             <FormDialog {...formDialogProps}/>
             <Paper elevation={3}>
                 <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>

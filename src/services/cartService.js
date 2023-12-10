@@ -12,8 +12,8 @@ const updateCart = (cartData) => {
     return axios.put(`${API_URL}cart/${id}`, cartData);
 }
 
-const addQuantityToCart = (userId, productId) => {
-    return axios.put(`${API_URL}cart/${userId}/${productId}`);
+const addQuantityToCart = (userId, productId, quantity) => {
+    return axios.put(`${API_URL}cart/${userId}/${productId}?quantity=${quantity}`);
 }
 
 const deleteCart = (id) => {

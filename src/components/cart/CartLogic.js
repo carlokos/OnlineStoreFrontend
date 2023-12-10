@@ -3,6 +3,7 @@ import CartService from "../../services/cartService";
 import ProductService from "../../services/productService";
 import Cookies from 'js-cookie';
 import { publish } from "./cartListener";
+import { OutOfStockError } from "../../exceptions/outOfStockException";
 
 //return 0 is user is not authenticated
 const getUserId = async () => {
@@ -15,25 +16,39 @@ const getUserId = async () => {
     return 0;
   }
 }
-export const addToCart = async (product) => {
-  const userId = await getUserId();
-  let cart = Cookies.getJSON('cart') || [];
-  const existingItem = cart.find((item) => item.productId === product.id);
+export const addToCart = async (product, quantity) => {
+  try {
+    const userId = await getUserId();
+    let cart = Cookies.getJSON('cart') || [];
+    const existingItem = cart.find((item) => item.productId === product.id);
+    const productInStock = await checkProductQuantity(product.id);
 
-  if (existingItem) {
-    existingItem.quantity += 1;
-    if(userId !== 0){
-      await CartService.addQuantityToCart(userId, product.id);
+    if (productInStock) {
+      throw new OutOfStockError("Product out of stock");
     }
-  } else {
-    const newItem = { productId: product.id, quantity: 1, userId: userId };
-    cart.push(newItem);
-    if (userId !== 0) {
-      await CartService.addCart(newItem);
+
+    if (quantity === undefined) {
+      quantity = 1;
     }
+
+    if (existingItem) {
+      existingItem.quantity += parseInt(quantity, 10);
+      if (userId !== 0) {
+        await CartService.addQuantityToCart(userId, product.id, quantity);
+      }
+    } else {
+      const newItem = { productId: product.id, quantity: quantity, userId: userId };
+      cart.push(newItem);
+      if (userId !== 0) {
+        await CartService.addCart(newItem);
+      }
+    }
+    updateProductQuantity(product.id, quantity, false);
+    Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+    publish('CART_UPDATED', getTotalQuantity());
+  } catch(error){
+    throw error;
   }
-  Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
-  publish('CART_UPDATED', getTotalQuantity());
 };
 
 export const asignCartToCurrentUser = async () => {
@@ -56,10 +71,15 @@ export const asignCartToCurrentUser = async () => {
 
 export const removeFromCart = async (productId, id) => {
   let cart = Cookies.getJSON('cart') || [];
+  const removedItem = cart.find((item) => item.productId === productId);
   const updatedCart = cart.filter((item) => item.productId !== productId);
+  const userId = await getUserId();
 
-  await CartService.deleteCart(id);
+  if (userId !== 0) {
+    await CartService.deleteCart(id);
+  }
 
+  updateProductQuantity(productId, removedItem.quantity, true);
   Cookies.remove('cart');
   Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 });
   publish('CART_UPDATED', getTotalQuantity());
@@ -67,30 +87,42 @@ export const removeFromCart = async (productId, id) => {
 };
 
 export const increaseQuantity = async (productId) => {
+  const productInStock = await checkProductQuantity(productId);
+  if (productInStock) {
+    throw new OutOfStockError("Product out of stock");
+  }
+
   let cart = Cookies.getJSON('cart') || [];
+  const userId = await getUserId();
   const updatedCart = await Promise.all(cart.map(async (item) => {
     if (item.productId === productId) {
       const updatedItem = { ...item, quantity: item.quantity + 1 };
-      await CartService.updateCart(updatedItem);
+      if (userId !== 0) {
+        await CartService.updateCart(updatedItem);
+      }
       return updatedItem;
     }
     return item;
   }));
 
   Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 });
+  updateProductQuantity(productId, 1, false);
   publish('CART_UPDATED', getTotalQuantity());
   return updatedCart;
 };
 
 export const decreaseQuantity = async (productId) => {
   let cart = Cookies.getJSON('cart') || [];
+  const userId = await getUserId();
   const updatedCart = await Promise.all(cart.map(async (item) => {
     if (item.productId === productId) {
       const updatedItem = { ...item, quantity: Math.max(0, item.quantity - 1) };
-      if (updatedItem.quantity === 0) {
-        await CartService.deleteCart(item.id);
-      } else {
-        await CartService.updateCart(updatedItem);
+      if (userId !== 0) {
+        if (updatedItem.quantity === 0) {
+          await CartService.deleteCart(item.id);
+        } else {
+          await CartService.updateCart(updatedItem);
+        }
       }
       return updatedItem.quantity > 0 ? updatedItem : null;
     }
@@ -98,6 +130,7 @@ export const decreaseQuantity = async (productId) => {
   }));
   const filteredCart = updatedCart.filter((item) => item !== null);
   Cookies.set('cart', JSON.stringify(filteredCart), { expires: 7 });
+  updateProductQuantity(productId, 1, true);
   publish('CART_UPDATED', getTotalQuantity());
   return filteredCart;
 };
@@ -108,7 +141,7 @@ export const getCart = () => {
 
 export const getTotalQuantity = () => {
   const cart = Cookies.getJSON('cart') || [];
-  const totalQuantity = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+  const totalQuantity = cart.reduce((acc, curr) => acc + parseInt(curr.quantity), 0);
   return totalQuantity;
 };
 
@@ -145,3 +178,21 @@ export const getTotalPrice = async () => {
 
   return totalPrice;
 };
+
+export const updateProductQuantity = async (productId, quantity, isAdding) => {
+  let product = await ProductService.getProduct(productId);
+
+  if (isAdding) {
+    product.data.stock += quantity;
+  } else {
+    product.data.stock -= quantity;
+  }
+
+  await ProductService.updateProduct(product.data);
+}
+
+export const checkProductQuantity = async (productId) => {
+  const product = await ProductService.getProduct(productId);
+  console.log(product.data.stock);
+  return product.data.stock <= 0;
+}

@@ -31,7 +31,7 @@ export default function FormDialog({ open, onClose, dataForm, updateItem, delete
     return (
         <div>
             <Dialog open={open} onClose={onClose}>
-                <DialogTitle>Formulario</DialogTitle>
+                <DialogTitle>Complete the form</DialogTitle>
                 <DialogContent>
                     {dataForm && React.createElement(dataForm.component, {
                         formData: dataForm.formData,

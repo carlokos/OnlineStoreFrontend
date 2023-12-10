@@ -39,6 +39,10 @@ const signup = (name, subname, email, password) => {
     )
 };
 
+const newAdmin = (adminData) => {
+    return axios.post(`${API_URL}auth/newAdmin`, adminData)
+}
+
 const loadCurrentUser = (token) => {
     try {
         return axios.get(`${API_URL}users/current`, {
@@ -76,7 +80,8 @@ const UserService = {
     loadCurrentUser,
     updateUser,
     updatePassword,
-    loadUserRoles
+    loadUserRoles,
+    newAdmin
 };
 
 export default UserService;

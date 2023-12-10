@@ -23,7 +23,7 @@ function SpeedDialComponent( {actions}) {
     return (
         <Box>
         <SpeedDial
-          ariaLabel='SpeedDial example'
+          ariaLabel='Add goods'
           sx={{ position: 'absolute', bottom: 10, right: 25 }}
           icon={<AddIcon />}
           onClose={handleSpeedDialClose}

@@ -11,6 +11,8 @@ import ProductService from '../../services/productService';
 import CategoryService from '../../services/categoryService';
 import AlertMessageComponent from '../../components/AlertMessageComponent/AlertMessageComponent';
 import isValid from '../../components/FormDialog/ProductForm/isValid';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import UserService from '../../services/userService';
 
 const AddGoods = () => {
     const [tabValue, setTabValue] = useState(0);
@@ -21,6 +23,9 @@ const AddGoods = () => {
 
     const [categoryFormData, setCategoryFormData] = useState({});
     const [isCategoryFormValid, setIsCategoryFormValid] = useState(false);
+
+    const [adminFormData, setAdminFormData] = useState({});
+    const [isAdminFormValid, setIsAdminFormValid] = useState(false);
 
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('Default message');
@@ -41,7 +46,6 @@ const AddGoods = () => {
 
         if (fieldName === 'image') {
             const file = event.target.files[0];
-            console.log(file);
             setImage(file);
         } else {
             setproductFormData({
@@ -60,6 +64,15 @@ const AddGoods = () => {
         });
     };
 
+    const handleAdminInputChange = (fieldName) => (event) => {
+        const value = event.target.type === 'number' ? parseFloat(event.target.value) : event.target.value;
+
+        setAdminFormData({
+            ...adminFormData,
+            [fieldName]: value,
+        });
+    };
+
     useEffect(() => {
         const checkProduct = isValid(productFormData);
         setIsProductFormValid(checkProduct);
@@ -73,6 +86,23 @@ const AddGoods = () => {
 
         setIsCategoryFormValid(isValid);
     }, [categoryFormData]);
+
+    useEffect(() => {
+        const { name, subname, email, password } = adminFormData;
+
+        const isAdminValid =
+            name &&
+            subname &&
+            email &&
+            password;
+
+        setIsAdminFormValid(isAdminValid);
+    }, [adminFormData]);
+
+    const validateEmail = (value) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+    };
 
     const addProduct = async () => {
         try {
@@ -112,6 +142,32 @@ const AddGoods = () => {
         }
     }
 
+    const handleCreateAdmin = async (e) => {
+        if(validateEmail(adminFormData.email)){
+            await createAdmin();
+        } else {
+            makeAlert("Invalid email format", "error");
+        }
+    }
+
+    const createAdmin = async () => {
+        try {
+            if (isAdminFormValid) {
+                await UserService.newAdmin(adminFormData);
+
+                setAdminFormData({});
+                setIsAdminFormValid(false);
+
+                makeAlert('New admin created successfully', 'success');
+            } else {
+                makeAlert('Please fill out all fields correctly', 'error');
+            }
+        } catch (error) {
+            makeAlert('Error creating admin', 'error');
+            console.log(error);
+        }
+    };
+
     return (
         <div className="container-fluid d-flex justify-content-center align-items-center vw-100 vh-100">
             <AlertMessageComponent message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
@@ -121,11 +177,12 @@ const AddGoods = () => {
                     <Tabs value={tabValue} onChange={handleChange} centered>
                         <Tab label="Add new product" />
                         <Tab label="Add new category" />
+                        <Tab label="Create new admin" />
                     </Tabs>
 
                     <TabPanel value={tabValue} index={0}>
                         <ProductForm formData={productFormData} handleInputChange={handleProductInputChange} />
-                        <Button variant="contained" color="primary" onClick={addProduct} style={{ m : 2 }}>
+                        <Button variant="contained" style={{ backgroundColor: '#757575', m : 2 }} onClick={addProduct}>
                             Add
                         </Button>
                     </TabPanel>
@@ -137,8 +194,50 @@ const AddGoods = () => {
                             fullWidth
                             margin="normal"
                         />
-                        <Button variant="contained" color="primary" onClick={addCategory} style={{ m : 2 }}>
+                        <Button variant="contained" style={{ backgroundColor: '#757575', m : 2 }} onClick={addCategory}>
                             Add
+                        </Button>
+                    </TabPanel>
+                    <TabPanel value={tabValue} index={2}>
+                    <TextField
+                            label="First Name"
+                            value={adminFormData.name || ''}
+                            onChange={handleAdminInputChange('name')}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Last Name"
+                            value={adminFormData.subname || ''}
+                            onChange={handleAdminInputChange('subname')}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            type="email"
+                            label="Email"
+                            value={adminFormData.email || ''}
+                            onChange={handleAdminInputChange('email')}
+                            fullWidth
+                            margin="normal"
+                            error={adminFormData.email && !validateEmail(adminFormData.email)}
+                            helperText={adminFormData.email && !validateEmail(adminFormData.email) ? 'Invalid email format' : ''}
+                        />
+                        <TextField
+                            type="password"
+                            label="Password"
+                            value={adminFormData.password || ''}
+                            onChange={handleAdminInputChange('password')}
+                            fullWidth
+                            margin="normal"
+                        />
+
+                        <Button
+                            variant="contained"
+                            style={{ backgroundColor: '#757575', m: 2 }}
+                            onClick={handleCreateAdmin}
+                        >
+                            Create Admin<PersonAddIcon />
                         </Button>
                     </TabPanel>
                 </Box>

@@ -4,12 +4,23 @@ import ProductForm from "./ProductForm/ProductForm";
 import isValid from "./ProductForm/isValid";
 import FormDialog from "./FormDialog";
 import ImageService from "../../services/ImageService";
+import Alert from '../AlertMessageComponent/AlertMessageComponent';
 
 const UpdateProductDialog = ({ open, onClose, id }) => {
     const [product, setProduct] = useState({});
     const [formData, setFormData] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [image, setImage] = useState(null);
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('Default message');
+    const [severity, setSeverity] = useState('info');
+
+    const makeAlert = (msg, severity) => {
+        setMessage(msg);
+        setSeverity(severity);
+        setShowAlert(true);
+    }
 
     useEffect(() => {
         const loadProduct = async () => {
@@ -56,10 +67,10 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
                 onClose();
                 window.location.reload();
             } else {
-                console.log("hay campos vacios");
+                makeAlert("Please make sure to complete all fields.", "error");
             }
         } catch (error) {
-            console.error('Error updating product:', error);
+            makeAlert("Unexpected error updating product. Check if title is unique");
         }
     };
 
@@ -75,6 +86,8 @@ const UpdateProductDialog = ({ open, onClose, id }) => {
     
     return (
         <div>
+            <Alert message={message} severity={severity} open={showAlert} onClose={() => setShowAlert(false)}/>
+
             <FormDialog
                 open={open}
                 onClose={onClose}

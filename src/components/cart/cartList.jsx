@@ -1,12 +1,13 @@
 import React from 'react';
 import { List, Typography, Paper } from '@mui/material';
 import CartCard from './CartCard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const CartList = ({ cart }) => {
   return (
     <div>
       <Typography variant="h4">
-        Shopping Cart
+        Shopping Cart <ShoppingCartIcon/>
       </Typography>
       <Paper elevation={3} style={{ minHeight: '400px', maxHeight: '500px', minWidth: '500px', overflowY: "auto" }}>
         <List>
