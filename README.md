@@ -7,10 +7,10 @@ Before deploying, ensure you've downloaded both this repository and the **fronte
 
 Once you have both repositories on your machine, organize the directories correctly according to the `docker-compose.yml`. Please check the provided `docker-compose.yml` for guidance.
 
-- Backend
+- Backend from repository
 -- Backend-files
-- Any name
--- Frontend
+- Any folder name
+-- Frontend from repository
 ---- Frontend-files
   
 # How to use it
