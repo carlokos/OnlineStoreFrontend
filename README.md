@@ -6,11 +6,7 @@ Project created at JavaSchool 2023, this repository saves my API for my onlineSt
 Before deploying, ensure you've downloaded both this repository and the **frontend** repository: [OnlineStoreFrontend](https://github.com/carlokos/OnlineStoreFrontend.git). 
 
 Once you have both repositories on your machine, organize the directories correctly according to the `docker-compose.yml`. Please check the provided `docker-compose.yml` for guidance.
-		|-- Backend
-			--|-- Backend-files
-		|-- Any name
-			--|-- Frontend
-			----|--Frontend-files
+
 
 # How to use it
 
