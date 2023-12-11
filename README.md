@@ -2,7 +2,7 @@
 Project created at JavaSchool 2023, this repository saves the web app from my final project, which is OnlineStore. I use React and Nodejs for web development and mostly MaterialUI for the interface to make it responsive. 
 
 # How to deploy
-Before deploying, ensure you've downloaded both this repository and the **frontend** repository: [OnlineStoreFrontend](https://github.com/carlokos/OnlineStoreFrontend.git). 
+Before deploying, ensure you've downloaded both this repository and the **backend** repository: [OnlineStoreBackend](https://github.com/carlokos/OnlineStore.git). 
 
 Once you have both repositories on your machine, organize the directories correctly according to the `docker-compose.yml`. Please check the provided `docker-compose.yml` for guidance
 ```
