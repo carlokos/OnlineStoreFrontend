@@ -31,7 +31,8 @@ Hope you enjoy navigating through my OnlineStore!
 - Real time updates with cart and orders
 - Persistent cart even closing the web
 - User can sign in, log in and change its information
-- Admin privileges 
+- Admin privileges
+- Error managing and security
 - Stastistics to compare sales
 - All in a docker container to easy use
 
