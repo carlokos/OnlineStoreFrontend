@@ -1,5 +1,5 @@
 # Online Store Frontend
-Project created at JavaSchool 2023, this repository saves the web app from my final project, which is OnlineStore. I use React for web development and mostly MaterialUI for the interface to make it responsive. 
+Project created at JavaSchool 2023, this repository saves the web app from my final project, which is OnlineStore. I use React and Nodejs for web development and mostly MaterialUI for the interface to make it responsive. 
 
 # How to deploy
 Before deploying, ensure you've downloaded both this repository and the **frontend** repository: [OnlineStoreFrontend](https://github.com/carlokos/OnlineStoreFrontend.git). 
